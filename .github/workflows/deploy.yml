@@ -1,0 +1,152 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ trunk ]
+  workflow_run:
+    workflows: ["Check"]
+    types: [completed]
+    branches: [ trunk ]
+
+jobs:
+  deploy:
+    name: Deploy to Digital Ocean
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'push'
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Cache Kotlin/Native dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.konan
+        key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-konan-
+
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+
+    - name: Build WASM distribution
+      run: ./gradlew :composeApp:wasmJsBrowserDistribution --no-daemon
+
+    - name: Setup Nginx reverse proxy
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        script: |
+          # Install Nginx if not installed
+          if ! command -v nginx >/dev/null 2>&1; then
+            apt update && apt install -y nginx
+          fi
+          
+          # Create Nginx configuration for port 80
+          cat > /etc/nginx/sites-available/drivebit-clients << 'EOF'
+          server {
+              listen 80;
+              server_name ${{ secrets.SERVER_DOMAIN || secrets.SERVER_HOST }};
+              root /var/www/drivebit-clients;
+              index index.html;
+              
+              location / {
+                  try_files \$uri \$uri/ /index.html;
+              }
+              
+              # Enable gzip compression
+              gzip on;
+              gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+              
+              # Cache static assets
+              location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|wasm)$ {
+                  expires 1y;
+                  add_header Cache-Control "public, immutable";
+              }
+          }
+          EOF
+          
+          # Enable the site
+          ln -sf /etc/nginx/sites-available/drivebit-clients /etc/nginx/sites-enabled/
+          rm -f /etc/nginx/sites-enabled/default
+          nginx -t && systemctl reload nginx
+
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        script: |
+          # Create backup of current deployment
+          if [ -d "/var/www/drivebit-clients" ]; then
+            sudo cp -r /var/www/drivebit-clients /var/www/drivebit-clients.backup.$(date +%Y%m%d_%H%M%S)
+          fi
+          
+          # Create deployment directory if it doesn't exist
+          sudo mkdir -p /var/www/drivebit-clients
+          sudo chown -R $USER:$USER /var/www/drivebit-clients
+
+    - name: Copy files to server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        source: "composeApp/build/dist/wasmJs/productionExecutable/"
+        target: "/var/www/drivebit-clients"
+        strip_components: 0
+
+    - name: Set permissions and reload Nginx
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        script: |
+          # Set proper permissions
+          chown -R www-data:www-data /var/www/drivebit-clients
+          chmod -R 755 /var/www/drivebit-clients
+          
+          # Reload Nginx to serve new files
+          systemctl reload nginx
+          systemctl status nginx --no-pager
+
+    - name: Notify deployment success
+      if: success()
+      run: |
+        echo "✅ Deployment successful!"
+        echo "🌐 App deployed to: http://${{ secrets.SERVER_DOMAIN || secrets.SERVER_HOST }}"
+
+    - name: Notify deployment failure
+      if: failure()
+      run: |
+        echo "❌ Deployment failed!"
+        echo "Check the logs above for details."
