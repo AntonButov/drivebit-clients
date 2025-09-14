@@ -20,7 +20,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import drivebitclients.composeapp.generated.resources.Res
-import drivebitclients.composeapp.generated.resources.compose_multiplatform
+import drivebitclients.composeapp.generated.resources.drivebitstub
 
 @Composable
 @Preview
@@ -36,8 +36,15 @@ fun App() {
             Spacer(Modifier.size(100.dp))
             Text(
                 text = "Скоро",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.headlineMedium
             )
+            Spacer(Modifier.size(24.dp))
+            Image(
+                painter = painterResource(Res.drawable.drivebitstub),
+                contentDescription = "DriveBit Stub",
+                modifier = Modifier.size(600.dp)
+            )
+            Spacer(Modifier.size(24.dp))
         }
     }
 }
