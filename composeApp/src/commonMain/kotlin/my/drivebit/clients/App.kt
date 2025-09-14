@@ -36,7 +36,12 @@ fun App() {
             Spacer(Modifier.size(100.dp))
             Text(
                 text = "Скоро",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(Modifier.size(32.dp))
+            Text(
+                text = "🚗 DriveBit",
+                style = MaterialTheme.typography.headlineLarge
             )
         }
     }
