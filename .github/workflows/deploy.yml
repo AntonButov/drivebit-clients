@@ -53,7 +53,7 @@ jobs:
     - name: Build WASM distribution
       run: ./gradlew :composeApp:wasmJsBrowserDistribution --no-daemon
 
-    - name: Setup Nginx reverse proxy
+    - name: Test server connection
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SERVER_HOST }}
@@ -61,56 +61,48 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
         script: |
-          # Install Nginx if not installed
-          if ! command -v nginx >/dev/null 2>&1; then
-            apt update && apt install -y nginx
+          echo "🔍 Testing server connection..."
+          echo "✅ Connected to server successfully!"
+          echo "🖥️  Server info:"
+          uname -a
+          echo "📁 Current directory: $(pwd)"
+          echo "👤 Current user: $(whoami)"
+          echo "🔑 User ID: $(id)"
+
+    - name: Prepare deployment directory
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        script: |
+          set -e  # Exit on any error
+          echo "🚀 Preparing deployment directory..."
+          
+          # Check if running as root or with sudo
+          if [ "$EUID" -ne 0 ]; then
+            echo "⚠️  Not running as root, using sudo for system commands"
+            SUDO_CMD="sudo"
+          else
+            echo "✅ Running as root"
+            SUDO_CMD=""
           fi
           
-          # Create Nginx configuration for port 80
-          cat > /etc/nginx/sites-available/drivebit-clients << 'EOF'
-          server {
-              listen 80;
-              server_name ${{ secrets.SERVER_DOMAIN || secrets.SERVER_HOST }};
-              root /var/www/drivebit-clients;
-              index index.html;
-              
-              location / {
-                  try_files \$uri \$uri/ /index.html;
-              }
-              
-              # Enable gzip compression
-              gzip on;
-              gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
-              
-              # Cache static assets
-              location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|wasm)$ {
-                  expires 1y;
-                  add_header Cache-Control "public, immutable";
-              }
-          }
-          EOF
-          
-          # Enable the site
-          ln -sf /etc/nginx/sites-available/drivebit-clients /etc/nginx/sites-enabled/
-          rm -f /etc/nginx/sites-enabled/default
-          nginx -t && systemctl reload nginx
-
-    - name: Deploy to server
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: ${{ secrets.SERVER_PORT || 22 }}
-        script: |
           # Create backup of current deployment
           if [ -d "/var/www/drivebit-clients" ]; then
-            sudo cp -r /var/www/drivebit-clients /var/www/drivebit-clients.backup.$(date +%Y%m%d_%H%M%S)
+            echo "💾 Creating backup of current deployment..."
+            $SUDO_CMD cp -r /var/www/drivebit-clients /var/www/drivebit-clients.backup.$(date +%Y%m%d_%H%M%S)
+            echo "✅ Backup created successfully"
+          else
+            echo "ℹ️  No existing deployment found, skipping backup"
           fi
           
           # Create deployment directory if it doesn't exist
-          sudo mkdir -p /var/www/drivebit-clients
-          sudo chown -R $USER:$USER /var/www/drivebit-clients
+          echo "📁 Creating deployment directory..."
+          $SUDO_CMD mkdir -p /var/www/drivebit-clients
+          $SUDO_CMD chown -R $USER:$USER /var/www/drivebit-clients
+          echo "✅ Deployment directory prepared"
 
     - name: Copy files to server
       uses: appleboy/scp-action@v0.1.7
@@ -123,7 +115,7 @@ jobs:
         target: "/var/www/drivebit-clients"
         strip_components: 0
 
-    - name: Set permissions and reload Nginx
+    - name: Set file permissions
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SERVER_HOST }}
@@ -131,19 +123,38 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
         script: |
-          # Set proper permissions
-          chown -R www-data:www-data /var/www/drivebit-clients
-          chmod -R 755 /var/www/drivebit-clients
+          set -e  # Exit on any error
+          echo "🔐 Setting file permissions..."
           
-          # Reload Nginx to serve new files
-          systemctl reload nginx
-          systemctl status nginx --no-pager
+          # Check if running as root or with sudo
+          if [ "$EUID" -ne 0 ]; then
+            echo "⚠️  Not running as root, using sudo for system commands"
+            SUDO_CMD="sudo"
+          else
+            echo "✅ Running as root"
+            SUDO_CMD=""
+          fi
+          
+          # Set proper permissions
+          echo "📋 Setting file permissions..."
+          $SUDO_CMD chown -R $USER:$USER /var/www/drivebit-clients
+          $SUDO_CMD chmod -R 755 /var/www/drivebit-clients
+          echo "✅ Permissions set successfully"
+          
+          # List deployed files
+          echo "📁 Deployed files:"
+          ls -la /var/www/drivebit-clients/
+          echo "✅ Deployment completed successfully!"
 
     - name: Notify deployment success
       if: success()
       run: |
         echo "✅ Deployment successful!"
-        echo "🌐 App deployed to: http://${{ secrets.SERVER_DOMAIN || secrets.SERVER_HOST }}"
+        echo "📁 Files deployed to: /var/www/drivebit-clients/"
+        echo "🌐 To serve the app, run on your server:"
+        echo "   cd /var/www/drivebit-clients && python3 -m http.server 80"
+        echo "   or: npx serve -s . -l 80"
+        echo "   or configure your web server to serve from this directory"
 
     - name: Notify deployment failure
       if: failure()
