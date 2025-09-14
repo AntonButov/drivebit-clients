@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="my.drivebit.clients.ComposeAppCommonTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-09-13T19:58:29.391Z" hostname="MacAnton.local" time="0.164">
+  <properties/>
+  <testcase name="example" classname="my.drivebit.clients.ComposeAppCommonTest" time="0.164"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

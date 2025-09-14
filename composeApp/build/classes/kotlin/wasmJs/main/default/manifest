@@ -1,0 +1,12 @@
+abi_version=2.2.0
+builtins_platform=WASM
+compiler_version=2.2.10
+depends=components.resources\:library components.ui-tooling-preview\:library org.jetbrains.compose.material3\:material3 org.jetbrains.compose.material\:material-ripple org.jetbrains.compose.foundation\:foundation org.jetbrains.androidx.lifecycle\:lifecycle-viewmodel-compose org.jetbrains.compose.animation\:animation org.jetbrains.compose.foundation\:foundation-layout org.jetbrains.compose.ui\:ui org.jetbrains.kotlinx\:kotlinx-browser org.jetbrains.androidx.lifecycle\:lifecycle-runtime-compose org.jetbrains.compose.annotation-internal\:annotation org.jetbrains.androidx.lifecycle\:lifecycle-common org.jetbrains.androidx.lifecycle\:lifecycle-viewmodel org.jetbrains.androidx.lifecycle\:lifecycle-viewmodel-savedstate org.jetbrains.androidx.lifecycle\:lifecycle-runtime androidx.lifecycle\:lifecycle-runtime androidx.lifecycle\:lifecycle-viewmodel-savedstate androidx.lifecycle\:lifecycle-viewmodel androidx.lifecycle\:lifecycle-common androidx.savedstate\:savedstate androidx.annotation\:annotation org.jetbrains.kotlinx\:kotlinx-serialization-core org.jetbrains.compose.runtime\:runtime-saveable org.jetbrains.compose.runtime\:runtime org.jetbrains.compose.animation\:animation-core org.jetbrains.kotlinx\:kotlinx-coroutines-core org.jetbrains.kotlinx\:atomicfu kotlin org.jetbrains.compose.ui\:ui-text org.jetbrains.compose.ui\:ui-graphics org.jetbrains.compose.ui\:ui-unit org.jetbrains.skiko\:skiko org.jetbrains.compose.ui\:ui-geometry org.jetbrains.compose.ui\:ui-util
+ir_signature_versions=1,2
+jsOutputName=Drivebitclients-composeApp
+language_features=+JsAllowImplementingFunctionInterface +JsAllowValueClassesInExternals +MultiPlatformProjects
+metadata_version=1.4.1
+serializedIrFileFingerprints=cbjlh1qjo28w.2thhk9xvmlgx8 o39hh0ectt38.2uy8uefbm5g1a 3vstofu6zv621.2ynueilhwixjl 37xdesrvy3ace.1uv58mni39bpd ruvzijo088na.1tugjqcbclnov 231xa9fugphrb.i9g9w7qc0nzh 1m52p2gxf9jaf.21d4oo9h5lzfn 2u4ybh19r40fk.3hb6mk0ziru7v 141v0l8bslibb.3rma0mjb8zcft
+serializedKlibFingerprint=qdm50yc9w27m.ci8cfab8pjyn
+unique_name=Drivebitclients\:composeApp
+wasm_targets=wasm-js
