@@ -146,7 +146,7 @@ jobs:
           ls -la /var/www/drivebit-clients/
           echo "✅ Deployment completed successfully!"
 
-    - name: Restart web server
+    - name: Configure Nginx
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SERVER_HOST }}
@@ -155,7 +155,7 @@ jobs:
         port: ${{ secrets.SERVER_PORT || 22 }}
         script: |
           set -e  # Exit on any error
-          echo "🔄 Restarting web server..."
+          echo "🔧 Configuring Nginx..."
           
           # Check if running as root or with sudo
           if [ "$EUID" -ne 0 ]; then
@@ -166,24 +166,50 @@ jobs:
             SUDO_CMD=""
           fi
           
-          # Kill any existing Python processes on port 3001
-          echo "🛑 Stopping existing server processes..."
-          $SUDO_CMD pkill -f "python3.*server.py" || echo "No existing server processes found"
+          # Create Nginx configuration for port 80
+          echo "📝 Creating Nginx configuration..."
+          $SUDO_CMD tee /etc/nginx/sites-available/drivebit-clients > /dev/null << 'EOF'
+          server {
+              listen 80;
+              server_name ${{ secrets.SERVER_DOMAIN || secrets.SERVER_HOST }};
+              root /var/www/drivebit-clients;
+              index index.html;
+              
+              location / {
+                  try_files $uri $uri/ /index.html;
+              }
+              
+              # Enable gzip compression
+              gzip on;
+              gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+              
+              # Cache static assets
+              location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|wasm)$ {
+                  expires 1y;
+                  add_header Cache-Control "public, immutable";
+              }
+          }
+          EOF
+          
+          # Enable the site
+          echo "🔗 Enabling Nginx site..."
+          $SUDO_CMD ln -sf /etc/nginx/sites-available/drivebit-clients /etc/nginx/sites-enabled/
+          $SUDO_CMD rm -f /etc/nginx/sites-enabled/default
+          
+          # Test and reload Nginx
+          echo "🧪 Testing Nginx configuration..."
+          $SUDO_CMD nginx -t
+          echo "🔄 Reloading Nginx..."
+          $SUDO_CMD systemctl reload nginx
+          echo "✅ Nginx configured and reloaded successfully"
+          
+          # Check if Nginx is serving the site
           sleep 2
-          
-          # Start the server in background
-          echo "🚀 Starting web server..."
-          cd /var/www/drivebit-clients
-          nohup python3 server.py > server.log 2>&1 &
-          echo "✅ Web server started successfully"
-          
-          # Wait a moment and check if server is running
-          sleep 3
-          if curl -f http://localhost:3001/ > /dev/null 2>&1; then
-            echo "✅ Server is responding correctly"
+          if curl -f http://localhost/ > /dev/null 2>&1; then
+            echo "✅ Nginx is serving the application correctly"
           else
-            echo "❌ Server is not responding, checking logs..."
-            tail -20 server.log
+            echo "❌ Nginx is not responding, checking status..."
+            $SUDO_CMD systemctl status nginx --no-pager
             exit 1
           fi
 
@@ -192,8 +218,8 @@ jobs:
       run: |
         echo "✅ Deployment successful!"
         echo "📁 Files deployed to: /var/www/drivebit-clients/"
-        echo "🌐 Application is now live at: https://drivebit.my/"
-        echo "🔄 Web server has been restarted with new files"
+        echo "🌐 Application is now live at: http://${{ secrets.SERVER_DOMAIN || secrets.SERVER_HOST }}/"
+        echo "🔧 Nginx configured and serving the application"
 
     - name: Notify deployment failure
       if: failure()
