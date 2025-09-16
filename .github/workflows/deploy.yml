@@ -179,7 +179,7 @@ jobs:
                   try_files $uri $uri/ /index.html;
               }
               
-              # Enable compression (gzip + brotli)
+              # Optimized gzip compression
               gzip on;
               gzip_vary on;
               gzip_min_length 1024;
@@ -194,20 +194,6 @@ jobs:
                   application/xml+rss
                   application/atom+xml
                   image/svg+xml
-                  application/wasm;
-              
-              # Brotli compression (if available)
-              brotli on;
-              brotli_comp_level 6;
-              brotli_types
-                  text/plain
-                  text/css
-                  application/json
-                  application/javascript
-                  text/xml
-                  application/xml
-                  application/xml+rss
-                  text/javascript
                   application/wasm;
               
               # Cache static assets with different strategies
@@ -251,10 +237,8 @@ jobs:
           $SUDO_CMD ln -sf /etc/nginx/sites-available/drivebit-clients /etc/nginx/sites-enabled/
           $SUDO_CMD rm -f /etc/nginx/sites-enabled/default
           
-          # Install Brotli module for better compression
-          echo "📦 Installing Brotli compression module..."
-          $SUDO_CMD apt update -qq
-          $SUDO_CMD apt install -y nginx-module-brotli || echo "⚠️  Brotli module not available, using gzip only"
+          # Nginx is already configured with optimized gzip compression
+          echo "✅ Nginx already configured with optimized gzip compression"
           
           # Test and reload Nginx
           echo "🧪 Testing Nginx configuration..."
