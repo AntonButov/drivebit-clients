@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background - solid black -->
+  <rect width="512" height="512" rx="112" ry="112" fill="#000000"/>
+  
+  <!-- Main content centered -->
+  <g transform="translate(256, 256)">
+    <!-- DRIVEBIT text -->
+    <text x="0" y="0" 
+          font-family="Arial, sans-serif" 
+          font-size="48" 
+          font-weight="bold" 
+          fill="white" 
+          text-anchor="middle"
+          letter-spacing="2px"
+          filter="url(#glow)">
+      DRIVEBIT
+    </text>
+  </g>
+</svg>
