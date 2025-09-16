@@ -179,14 +179,69 @@ jobs:
                   try_files $uri $uri/ /index.html;
               }
               
-              # Enable gzip compression
+              # Enable compression (gzip + brotli)
               gzip on;
-              gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+              gzip_vary on;
+              gzip_min_length 1024;
+              gzip_comp_level 6;
+              gzip_types
+                  text/plain
+                  text/css
+                  text/xml
+                  text/javascript
+                  application/json
+                  application/javascript
+                  application/xml+rss
+                  application/atom+xml
+                  image/svg+xml
+                  application/wasm;
               
-              # Cache static assets
-              location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|wasm)$ {
+              # Brotli compression (if available)
+              brotli on;
+              brotli_comp_level 6;
+              brotli_types
+                  text/plain
+                  text/css
+                  application/json
+                  application/javascript
+                  text/xml
+                  application/xml
+                  application/xml+rss
+                  text/javascript
+                  application/wasm;
+              
+              # Cache static assets with different strategies
+              location ~* \.(js|css|wasm)$ {
                   expires 1y;
                   add_header Cache-Control "public, immutable";
+                  add_header Vary "Accept-Encoding";
+              }
+              
+              location ~* \.(png|jpg|jpeg|gif|ico|svg|webp|avif)$ {
+                  expires 1y;
+                  add_header Cache-Control "public, immutable";
+                  add_header Vary "Accept-Encoding";
+              }
+              
+              location ~* \.(woff|woff2|ttf|eot)$ {
+                  expires 1y;
+                  add_header Cache-Control "public, immutable";
+                  add_header Access-Control-Allow-Origin "*";
+              }
+              
+              # HTML files - short cache for updates
+              location ~* \.html$ {
+                  expires 1h;
+                  add_header Cache-Control "public, must-revalidate";
+                  add_header Vary "Accept-Encoding";
+              }
+              
+              # Preload critical resources
+              location = /index.html {
+                  add_header Link "</composeApp.js>; rel=preload; as=script";
+                  add_header Link "</composeApp.wasm>; rel=preload; as=fetch; crossorigin";
+                  expires 1h;
+                  add_header Cache-Control "public, must-revalidate";
               }
           }
           EOF
@@ -195,6 +250,11 @@ jobs:
           echo "🔗 Enabling Nginx site..."
           $SUDO_CMD ln -sf /etc/nginx/sites-available/drivebit-clients /etc/nginx/sites-enabled/
           $SUDO_CMD rm -f /etc/nginx/sites-enabled/default
+          
+          # Install Brotli module for better compression
+          echo "📦 Installing Brotli compression module..."
+          $SUDO_CMD apt update -qq
+          $SUDO_CMD apt install -y nginx-module-brotli || echo "⚠️  Brotli module not available, using gzip only"
           
           # Test and reload Nginx
           echo "🧪 Testing Nginx configuration..."
