@@ -1,0 +1,30 @@
+# Drivebit Clients - Cursor Rules
+
+## Project Overview
+This is a Kotlin Multiplatform project for Drivebit mobile clients targeting Android, iOS, and Web platforms.
+
+## Code Style & Conventions
+- Use Kotlin coding conventions
+- Follow Material Design guidelines for Android
+- Follow iOS Human Interface Guidelines for iOS
+- Use Compose Multiplatform for shared UI
+- Prefer immutable data structures
+- Use meaningful variable and function names
+
+## File Structure
+- `composeApp/src/commonMain/` - Shared code across all platforms
+- `composeApp/src/androidMain/` - Android-specific code
+- `composeApp/src/iosMain/` - iOS-specific code
+- `composeApp/src/wasmJsMain/` - Web-specific code
+- `iosApp/` - iOS app entry point
+
+## Build Commands
+- Android: `./gradlew :composeApp:assembleDebug`
+- Web: `./gradlew :composeApp:wasmJsBrowserDevelopmentRun`
+- iOS: Open `iosApp/` in Xcode
+
+## Server Access
+- SSH: `ssh root@143.198.69.242`
+
+## Development Workflow
+- After every change, run tests: `./gradlew check`

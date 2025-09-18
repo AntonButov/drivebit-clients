@@ -15,28 +15,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import drivebitclients.composeapp.generated.resources.Res
 import drivebitclients.composeapp.generated.resources.drivebitstub
+import drivebitclients.composeapp.generated.resources.soon
+import my.drivebit.clients.theme.DrivebitTheme
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    DrivebitTheme {
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
                 .safeContentPadding()
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(Modifier.size(100.dp))
             Text(
-                text = "Скоро",
-                style = MaterialTheme.typography.headlineMedium
+                text = stringResource(Res.string.soon),
+                style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.ExtraBold)
             )
             Spacer(Modifier.size(24.dp))
             Image(
