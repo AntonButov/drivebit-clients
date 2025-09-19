@@ -53,6 +53,11 @@ jobs:
     - name: Build WASM distribution
       run: ./gradlew :composeApp:wasmJsBrowserDistribution --no-daemon
 
+    - name: Show built index.html title
+      run: |
+        echo "Built index.html header preview:" && \
+        head -n 15 composeApp/build/dist/wasmJs/productionExecutable/index.html | sed -n '1,15p'
+
     - name: Test server connection
       uses: appleboy/ssh-action@v1.0.3
       with:
@@ -69,7 +74,7 @@ jobs:
           echo "👤 Current user: $(whoami)"
           echo "🔑 User ID: $(id)"
 
-    - name: Prepare deployment directory
+    - name: Prepare deployment directory (clean target)
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SERVER_HOST }}
@@ -94,6 +99,9 @@ jobs:
             echo "💾 Creating backup of current deployment..."
             $SUDO_CMD cp -r /var/www/drivebit-clients /var/www/drivebit-clients.backup.$(date +%Y%m%d_%H%M%S)
             echo "✅ Backup created successfully"
+            echo "🧹 Cleaning current deployment contents..."
+            $SUDO_CMD rm -rf /var/www/drivebit-clients/*
+            echo "✅ Cleaned"
           else
             echo "ℹ️  No existing deployment found, skipping backup"
           fi
@@ -104,14 +112,14 @@ jobs:
           $SUDO_CMD chown -R $USER:$USER /var/www/drivebit-clients
           echo "✅ Deployment directory prepared"
 
-    - name: Copy files to server
+    - name: Copy files to server (upload built assets)
       uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
-        source: "composeApp/build/dist/wasmJs/productionExecutable/"
+        source: "composeApp/build/dist/wasmJs/productionExecutable/*"
         target: "/var/www/drivebit-clients"
         strip_components: 0
 
@@ -145,6 +153,16 @@ jobs:
           echo "📁 Deployed files:"
           ls -la /var/www/drivebit-clients/
           echo "✅ Deployment completed successfully!"
+
+    - name: Verify deployed page title
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        script: |
+          head -n 15 /var/www/drivebit-clients/index.html | sed -n '1,15p' | sed -n '1,8p'
 
     - name: Notify deployment success
       if: success()
