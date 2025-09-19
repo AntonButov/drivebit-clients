@@ -53,6 +53,17 @@ jobs:
     - name: Build WASM distribution
       run: ./gradlew :composeApp:wasmJsBrowserDistribution --no-daemon
 
+    - name: Install brotli
+      run: sudo apt-get update && sudo apt-get install -y brotli
+
+    - name: Precompress assets (gzip + brotli)
+      run: |
+        set -e
+        DIST=composeApp/build/dist/wasmJs/productionExecutable
+        echo "Compressing assets in $DIST"
+        find "$DIST" -type f \( -name '*.wasm' -o -name '*.js' -o -name '*.css' \) -print0 \
+          | xargs -0 -I{} bash -lc "gzip -f -k -9 '{}' && brotli -f -Z '{}' || true"
+
     - name: Show built index.html title
       run: |
         echo "Built index.html header preview:" && \
@@ -154,6 +165,22 @@ jobs:
           echo "📁 Deployed files:"
           ls -la /var/www/drivebit-clients/
           echo "✅ Deployment completed successfully!"
+
+    - name: Enable nginx static compression (gzip_static, wasm type)
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        script: |
+          set -e
+          if [ "$EUID" -ne 0 ]; then SUDO_CMD="sudo"; else SUDO_CMD=""; fi
+          CFG="/etc/nginx/conf.d/drivebit_static.conf"
+          echo "⚙️  Ensuring nginx static compression settings in $CFG"
+          $SUDO_CMD bash -lc "cat > $CFG <<'CONF'\n# drivebit static compression\ngzip_static on;\n# ensure wasm MIME present (in case not in mime.types)\ntypes { application/wasm wasm; }\nCONF"
+          $SUDO_CMD nginx -t
+          $SUDO_CMD systemctl reload nginx
 
     - name: Verify deployed page title
       uses: appleboy/ssh-action@v1.0.3
