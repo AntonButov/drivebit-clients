@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="soon">Скоро</string>
+    <string name="search">Калькулятор</string>
+    <string name="favorites">История</string>
+    <string name="trips">Проекты</string>
+    <string name="inbox">Настройки</string>
+    <string name="more">Еще</string>
+    <string name="country_russia">Россия</string>
+    <string name="country_united_states">United States</string>
+    <string name="country_kazakhstan">Kazakhstan</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="phone_confirmation">Мы отправим вам код для подтверждения номера.</string>
+    <string name="country_code">Код страны</string>
+    <string name="log_in">Войти</string>
 </resources>
-
-
-

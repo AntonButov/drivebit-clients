@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="soon">Soon</string>
+    <string name="search">Search</string>
+    <string name="favorites">Favorites</string>
+    <string name="trips">Trips</string>
+    <string name="inbox">Inbox</string>
+    <string name="more">More</string>
+    <string name="country_russia">Russia</string>
+    <string name="country_united_states">United States</string>
+    <string name="country_kazakhstan">Kazakhstan</string>
+    <string name="phone_number">Phone number</string>
+    <string name="phone_confirmation">We'll text you a code to confirm your number.</string>
+    <string name="country_code">Country Code</string>
+    <string name="log_in">Log in</string>
 </resources>
-
-
-

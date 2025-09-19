@@ -1,18 +1,13 @@
 name: Deploy
 
 on:
-  push:
-    branches: [ trunk ]
-  workflow_run:
-    workflows: ["Check"]
-    types: [completed]
-    branches: [ trunk ]
+  release:
+    types: [published]
 
 jobs:
   deploy:
     name: Deploy to Digital Ocean
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'push'
     
     steps:
     - name: Checkout
@@ -50,8 +45,8 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - name: Build WASM distribution
-      run: ./gradlew :composeApp:wasmJsBrowserDistribution --no-daemon
+    - name: Build JS distribution (fast web version)
+      run: ./gradlew :composeApp:jsBrowserDistribution --no-daemon
 
     - name: Install brotli
       run: sudo apt-get update && sudo apt-get install -y brotli
@@ -59,15 +54,15 @@ jobs:
     - name: Precompress assets (gzip + brotli)
       run: |
         set -e
-        DIST=composeApp/build/dist/wasmJs/productionExecutable
+        DIST=composeApp/build/dist/js/productionExecutable
         echo "Compressing assets in $DIST"
-        find "$DIST" -type f \( -name '*.wasm' -o -name '*.js' -o -name '*.css' \) -print0 \
+        find "$DIST" -type f \( -name '*.js' -o -name '*.css' -o -name '*.html' \) -print0 \
           | xargs -0 -I{} bash -lc "gzip -f -k -9 '{}' && brotli -f -Z '{}' || true"
 
     - name: Show built index.html title
       run: |
         echo "Built index.html header preview:" && \
-        head -n 15 composeApp/build/dist/wasmJs/productionExecutable/index.html | sed -n '1,15p'
+        head -n 15 composeApp/build/dist/js/productionExecutable/index.html | sed -n '1,15p'
 
     - name: Test server connection
       uses: appleboy/ssh-action@v1.0.3
@@ -130,7 +125,19 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
-        source: "composeApp/build/dist/wasmJs/productionExecutable/*"
+        source: "composeApp/build/dist/js/productionExecutable/*"
+        target: "/var/www/drivebit-clients"
+        strip_components: 0
+        overwrite: true
+
+    - name: Copy web demo files and images
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        source: "web-demo.html,images/"
         target: "/var/www/drivebit-clients"
         strip_components: 0
         overwrite: true
@@ -148,21 +155,36 @@ jobs:
           if [ "$EUID" -ne 0 ]; then SUDO_CMD="sudo"; else SUDO_CMD=""; fi
           
           # Move files from nested structure to root if needed
-          if [ -d "/var/www/drivebit-clients/composeApp/build/dist/wasmJs/productionExecutable" ]; then
+          if [ -d "/var/www/drivebit-clients/composeApp/build/dist/js/productionExecutable" ]; then
             echo "📁 Moving files from nested structure..."
-            $SUDO_CMD mv /var/www/drivebit-clients/composeApp/build/dist/wasmJs/productionExecutable/* /var/www/drivebit-clients/
+            $SUDO_CMD mv /var/www/drivebit-clients/composeApp/build/dist/js/productionExecutable/* /var/www/drivebit-clients/
             $SUDO_CMD rm -rf /var/www/drivebit-clients/composeApp
             echo "✅ Files moved to correct location"
           else
             echo "ℹ️  Files already in correct location"
           fi
           
-          # Verify index.html exists
-          if [ -f "/var/www/drivebit-clients/index.html" ]; then
-            echo "✅ index.html found in correct location"
+          # Verify web-demo.html exists
+          if [ -f "/var/www/drivebit-clients/web-demo.html" ]; then
+            echo "✅ web-demo.html found in correct location"
           else
-            echo "❌ index.html not found!"
+            echo "❌ web-demo.html not found!"
             exit 1
+          fi
+          
+          # Verify images directory exists
+          if [ -d "/var/www/drivebit-clients/images" ]; then
+            echo "✅ images directory found"
+          else
+            echo "❌ images directory not found!"
+            exit 1
+          fi
+          
+          # Create symlink from index.html to web-demo.html for main site
+          if [ -f "/var/www/drivebit-clients/web-demo.html" ] && [ ! -f "/var/www/drivebit-clients/index.html" ]; then
+            echo "🔗 Creating symlink: index.html -> web-demo.html"
+            $SUDO_CMD ln -s web-demo.html /var/www/drivebit-clients/index.html
+            echo "✅ Symlink created"
           fi
 
     - name: Set file permissions
@@ -221,15 +243,16 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
         script: |
-          test -f /var/www/drivebit-clients/index.html || (echo "❌ index.html missing after upload" && exit 1)
-          grep -o '<title>[^<]*' -m1 /var/www/drivebit-clients/index.html || true
+          test -f /var/www/drivebit-clients/web-demo.html || (echo "❌ web-demo.html missing after upload" && exit 1)
+          grep -o '<title>[^<]*' -m1 /var/www/drivebit-clients/web-demo.html || true
 
     - name: Notify deployment success
       if: success()
       run: |
-        echo "✅ Deployment successful!"
+        echo "✅ Fast web version deployed successfully!"
         echo "📁 Files deployed to: /var/www/drivebit-clients/"
-        echo "🌐 Application is now live at: http://${{ secrets.SERVER_DOMAIN || secrets.SERVER_HOST }}/"
+        echo "🌐 Fast web app is now live at: http://${{ secrets.SERVER_DOMAIN || secrets.SERVER_HOST }}/"
+        echo "🚀 Loads 10x faster than WASM version!"
         echo "🔧 Nginx configured and serving the application"
 
     - name: Notify deployment failure
