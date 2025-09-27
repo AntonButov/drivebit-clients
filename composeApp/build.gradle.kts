@@ -1,7 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+// import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -27,16 +26,34 @@ kotlin {
         }
     }
     
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser()
-        binaries.executable()
+    js(IR) {
+        browser {
+            commonWebpackConfig {
+                cssSupport {
+                    enabled.set(true)
+                }
+            }
+            binaries.executable()
+        }
+    }
+    
+    // Исключаем Compose из JS таргета для уменьшения размера бандла
+    sourceSets.getByName("jsMain") {
+        dependencies {
+            implementation(libs.kotlinx.html.js)
+            // Без Koin для JS, используем простую DI
+            // Без Compose для JS - используем SimpleWebApp
+        }
     }
     
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+        }
+        
+        iosMain.dependencies {
+            implementation(libs.voyager.koin)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -47,7 +64,15 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenmodel)
+            implementation(libs.voyager.tabs)
+            implementation(libs.voyager.koin)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.kotlinx.datetime)
         }
+        
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
@@ -55,7 +80,6 @@ kotlin {
             implementation(libs.kotlin.testJunit)
             implementation(libs.junit)
             implementation(libs.androidx.testExt.junit)
-            implementation(libs.androidx.espresso.core)
         }
     }
 }

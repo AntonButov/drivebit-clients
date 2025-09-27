@@ -34,11 +34,11 @@ To build and run the development version of the web app, use the run configurati
 in your IDE’s toolbar or run it directly from the terminal:
 - on macOS/Linux
   ```shell
-  ./gradlew :composeApp:wasmJsBrowserDevelopmentRun
+  ./gradlew :composeApp:jsBrowserDevelopmentRun
   ```
 - on Windows
   ```shell
-  .\gradlew.bat :composeApp:wasmJsBrowserDevelopmentRun
+  .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
   ```
 
 ### Build and Run iOS Application

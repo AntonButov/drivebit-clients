@@ -75,7 +75,7 @@ sudo chown -R $USER:$USER /var/www/drivebit-clients
    - Pull request is merged to `trunk` (after check workflow succeeds)
 
 2. **Build Process**:
-   - Builds WASM distribution: `./gradlew :composeApp:wasmJsBrowserDistribution`
+   - Builds JS distribution: `./gradlew :composeApp:jsBrowserDistribution`
    - Creates production-ready web files
 
 3. **Deployment Process**:
@@ -96,10 +96,10 @@ To deploy manually:
 
 ```bash
 # Build the project
-./gradlew :composeApp:wasmJsBrowserDistribution
+./gradlew :composeApp:jsBrowserDistribution
 
 # Copy files to server
-scp -r composeApp/build/dist/wasmJs/productionExecutable/* user@server:/var/www/drivebit-clients/
+scp -r composeApp/build/dist/js/productionExecutable/* user@server:/var/www/drivebit-clients/
 ```
 
 ## Troubleshooting
