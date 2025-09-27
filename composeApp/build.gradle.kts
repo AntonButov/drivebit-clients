@@ -37,6 +37,15 @@ kotlin {
         }
     }
     
+    // Исключаем Compose из JS таргета для уменьшения размера бандла
+    sourceSets.getByName("jsMain") {
+        dependencies {
+            implementation(libs.kotlinx.html.js)
+            // Без Koin для JS, используем простую DI
+            // Без Compose для JS - используем SimpleWebApp
+        }
+    }
+    
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -64,10 +73,6 @@ kotlin {
             implementation(libs.kotlinx.datetime)
         }
         
-        jsMain.dependencies {
-            implementation(libs.kotlinx.html.js)
-            // Без Koin для JS, используем простую DI
-        }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
