@@ -3,16 +3,11 @@ name: Deploy
 on:
   push:
     branches: [ trunk ]
-  workflow_run:
-    workflows: ["Check"]
-    types: [completed]
-    branches: [ trunk ]
 
 jobs:
   deploy:
     name: Deploy to Digital Ocean
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     
     steps:
     - name: Checkout
