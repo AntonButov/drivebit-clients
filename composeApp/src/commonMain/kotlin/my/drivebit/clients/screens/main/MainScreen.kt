@@ -39,7 +39,7 @@ class MainScreen : Screen {
                 TabNavigator(SearchTab) { tabNavigator ->
                     Scaffold(
                         bottomBar = {
-                            BottomNavigationBar(
+                            my.drivebit.clients.screens.main.BottomNavigationBar(
                                 currentTab = tabNavigator.current,
                                 onTabSelected = { tab ->
                                     tabNavigator.current = tab
@@ -54,4 +54,5 @@ class MainScreen : Screen {
         }
     }
 }
+
 
