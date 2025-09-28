@@ -52,7 +52,7 @@ val token = storage.getToken()
 Модуль полностью покрыт тестами. Запуск тестов:
 
 ```bash
-./gradlew :shared:test
+./gradlew :Storage:test
 ```
 
 ## Зависимости

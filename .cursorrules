@@ -10,6 +10,7 @@ This is a Kotlin Multiplatform project for Drivebit mobile clients targeting And
 - Use Compose Multiplatform for shared UI
 - Prefer immutable data structures
 - Use meaningful variable and function names
+- Do NOT write comments unless explicitly requested
 
 ## File Structure
 - `composeApp/src/commonMain/` - Shared code across all platforms
