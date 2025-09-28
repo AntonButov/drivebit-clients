@@ -56,35 +56,35 @@ private fun formatPhoneNumber(digits: String): String {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
-    onBack: () -> Unit = {}
-) {
+fun LoginScreen(onBack: () -> Unit = {}) {
     val russiaName = stringResource(Res.string.country_russia)
     val usaName = stringResource(Res.string.country_united_states)
     val kazakhstanName = stringResource(Res.string.country_kazakhstan)
-    
-    val countries = remember(russiaName, usaName, kazakhstanName) {
-        listOf(
-            Country(russiaName, "+7"),
-            Country(usaName, "+1"),
-            Country(kazakhstanName, "+7"),
-        )
-    }
+
+    val countries =
+        remember(russiaName, usaName, kazakhstanName) {
+            listOf(
+                Country(russiaName, "+7"),
+                Country(usaName, "+1"),
+                Country(kazakhstanName, "+7"),
+            )
+        }
     var countryExpanded by remember { mutableStateOf(false) }
     var selectedCountry by remember { mutableStateOf(countries.first()) }
     var phone by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.Start,
         ) {
             TextButton(onClick = onBack, content = {
                 Text(text = "←", style = MaterialTheme.typography.titleLarge)
@@ -93,8 +93,9 @@ fun LoginScreen(
                 text = stringResource(Res.string.log_in),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .padding(start = 8.dp)
+                modifier =
+                    Modifier
+                        .padding(start = 8.dp),
             )
         }
 
@@ -104,7 +105,7 @@ fun LoginScreen(
         ExposedDropdownMenuBox(
             expanded = countryExpanded,
             onExpandedChange = { countryExpanded = !countryExpanded },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             OutlinedTextField(
                 value = "${selectedCountry.name} ${selectedCountry.dialCode}",
@@ -113,16 +114,17 @@ fun LoginScreen(
                 readOnly = true,
                 singleLine = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = countryExpanded) },
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(MaterialTheme.colorScheme.surface),
-                enabled = true
+                modifier =
+                    Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(MaterialTheme.colorScheme.surface),
+                enabled = true,
             )
             DropdownMenu(
                 expanded = countryExpanded,
-                onDismissRequest = { countryExpanded = false }
+                onDismissRequest = { countryExpanded = false },
             ) {
                 countries.forEach { country ->
                     DropdownMenuItem(text = { Text("${country.name} ${country.dialCode}") }, onClick = {
@@ -145,8 +147,9 @@ fun LoginScreen(
             placeholder = { Text(stringResource(Res.string.phone_number)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
         )
 
         Spacer(Modifier.height(8.dp))
@@ -156,7 +159,7 @@ fun LoginScreen(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Start,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
@@ -168,5 +171,3 @@ fun LoginScreenPreview() {
         LoginScreen()
     }
 }
-
-

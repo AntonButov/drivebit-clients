@@ -140,7 +140,20 @@ jobs:
           # Move files from nested structure to root if needed
           if [ -d "/var/www/drivebit-clients/composeApp/build/dist/js/productionExecutable" ]; then
             echo "📁 Moving files from nested structure..."
-            $SUDO_CMD mv /var/www/drivebit-clients/composeApp/build/dist/js/productionExecutable/* /var/www/drivebit-clients/
+            # Move files one by one to handle existing directories
+            for file in /var/www/drivebit-clients/composeApp/build/dist/js/productionExecutable/*; do
+              if [ -f "$file" ]; then
+                $SUDO_CMD mv "$file" /var/www/drivebit-clients/
+              elif [ -d "$file" ]; then
+                # For directories, merge contents
+                dirname=$(basename "$file")
+                if [ -d "/var/www/drivebit-clients/$dirname" ]; then
+                  $SUDO_CMD cp -r "$file"/* /var/www/drivebit-clients/"$dirname"/
+                else
+                  $SUDO_CMD mv "$file" /var/www/drivebit-clients/
+                fi
+              fi
+            done
             $SUDO_CMD rm -rf /var/www/drivebit-clients/composeApp
             echo "✅ Files moved to correct location"
           else

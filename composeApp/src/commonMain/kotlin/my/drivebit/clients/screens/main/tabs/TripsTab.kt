@@ -13,12 +13,12 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import drivebitclients.composeapp.generated.resources.Res
 import drivebitclients.composeapp.generated.resources.trips
 import my.drivebit.clients.theme.DrivebitTheme
 import my.drivebit.clients.ui.icons.Icons
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 object TripsTab : Tab {
     override val options: TabOptions
@@ -27,23 +27,24 @@ object TripsTab : Tab {
             return TabOptions(
                 index = 2u,
                 title = stringResource(Res.string.trips),
-                icon = rememberVectorPainter(Icons.TripIcon)
+                icon = rememberVectorPainter(Icons.TripIcon),
             )
         }
 
     @Composable
     override fun Content() {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = "Trips Tab",
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
     }

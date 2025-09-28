@@ -1,7 +1,6 @@
 package my.drivebit.clients.theme
 
 object WebTheme {
-    
     fun getWebStyles(): String {
         return """
         * {
@@ -503,7 +502,7 @@ object WebTheme {
         }
         """
     }
-    
+
     fun getWebScripts(): String {
         return """
         // Установка минимальной даты

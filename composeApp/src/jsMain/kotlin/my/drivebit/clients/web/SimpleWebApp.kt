@@ -1,18 +1,17 @@
 package my.drivebit.clients.web
 
 import kotlinx.browser.document
-import kotlinx.browser.window
-    
-    fun SimpleWebApp() {
-        document.addEventListener("DOMContentLoaded", { _ ->
-            renderHomePage()
-        })
-    }
-    
-    private fun renderHomePage() {
-        val dataService = WebDataService()
-        val body = document.body
-        body?.innerHTML = """
+
+fun SimpleWebApp() {
+    document.addEventListener("DOMContentLoaded", { _ ->
+        renderHomePage()
+    })
+}
+
+private fun renderHomePage() {
+    val dataService = WebDataService()
+    val body = document.body
+    body?.innerHTML = """
             <!DOCTYPE html>
             <html lang="ru">
             <head>

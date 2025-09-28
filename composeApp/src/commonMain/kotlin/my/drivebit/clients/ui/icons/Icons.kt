@@ -18,19 +18,19 @@ import my.drivebit.clients.ui.icons.RoadIcon as RoadIconImpl
 object Icons {
     val SearchIcon: ImageVector
         @Composable get() = SearchIconImpl()
-    
+
     val FavoriteIcon: ImageVector
         @Composable get() = FavoriteIconImpl()
-    
+
     val TripIcon: ImageVector
         @Composable get() = TripIconImpl()
-    
+
     val InboxIcon: ImageVector
         @Composable get() = InboxIconImpl()
-    
+
     val MoreIcon: ImageVector
         @Composable get() = MoreIconImpl()
-    
+
     val RoadIcon: ImageVector
         @Composable get() = RoadIconImpl()
 }

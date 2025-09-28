@@ -28,12 +28,13 @@ fun InboxIcon(): ImageVector {
         defaultWidth = 24.dp,
         defaultHeight = 24.dp,
         viewportWidth = 24f,
-        viewportHeight = 24f
+        viewportHeight = 24f,
     ).apply {
-            path(fill = SolidColor(Color.Black), fillAlpha = 1f, stroke = null, strokeAlpha = 1f,
-                strokeLineWidth = 1f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 4f, pathFillType = PathFillType.NonZero
-            ) {
+        path(
+            fill = SolidColor(Color.Black), fillAlpha = 1f, stroke = null, strokeAlpha = 1f,
+            strokeLineWidth = 1f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
+            strokeLineMiter = 4f, pathFillType = PathFillType.NonZero,
+        ) {
             moveTo(19f, 3f)
             lineTo(5f, 3f)
             curveTo(3.9f, 3f, 3f, 3.9f, 3f, 5f)
@@ -77,22 +78,23 @@ fun InboxIcon(): ImageVector {
 fun InboxIconPreview() {
     MaterialTheme {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = "Inbox Icon",
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Icon(
                 imageVector = InboxIcon(),
                 contentDescription = "Inbox",
                 modifier = Modifier.size(48.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
     }

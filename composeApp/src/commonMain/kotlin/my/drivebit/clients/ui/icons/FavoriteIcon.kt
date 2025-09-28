@@ -28,12 +28,13 @@ fun FavoriteIcon(): ImageVector {
         defaultWidth = 24.dp,
         defaultHeight = 24.dp,
         viewportWidth = 24f,
-        viewportHeight = 24f
+        viewportHeight = 24f,
     ).apply {
-            path(fill = SolidColor(Color.Red), fillAlpha = 1f, stroke = null, strokeAlpha = 1f,
-                strokeLineWidth = 1f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-                strokeLineMiter = 4f, pathFillType = PathFillType.NonZero
-            ) {
+        path(
+            fill = SolidColor(Color.Red), fillAlpha = 1f, stroke = null, strokeAlpha = 1f,
+            strokeLineWidth = 1f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
+            strokeLineMiter = 4f, pathFillType = PathFillType.NonZero,
+        ) {
             moveTo(12f, 21.35f)
             lineTo(10.55f, 20.03f)
             curveTo(5.4f, 15.36f, 2f, 12.27f, 2f, 8.5f)
@@ -53,22 +54,23 @@ fun FavoriteIcon(): ImageVector {
 fun FavoriteIconPreview() {
     MaterialTheme {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = "Favorite Icon",
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
             Icon(
                 imageVector = FavoriteIcon(),
                 contentDescription = "Favorite",
                 modifier = Modifier.size(48.dp),
-                tint = Color.Red
+                tint = Color.Red,
             )
         }
     }

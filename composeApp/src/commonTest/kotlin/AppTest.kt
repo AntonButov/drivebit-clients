@@ -6,11 +6,10 @@ class AppTest {
     fun testApp() {
         assertTrue(true, "App should work")
     }
-    
+
     @Test
     fun testBasicMath() {
         val result = 2 + 2
         assertTrue(result == 4, "Basic math should work")
     }
 }
-

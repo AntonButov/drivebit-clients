@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 // import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
@@ -7,6 +6,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.ktlint)
 }
 
 kotlin {
@@ -15,17 +15,17 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
         }
     }
-    
+
     js(IR) {
         browser {
             commonWebpackConfig {
@@ -36,7 +36,7 @@ kotlin {
             binaries.executable()
         }
     }
-    
+
     // Исключаем Compose из JS таргета для уменьшения размера бандла
     sourceSets.getByName("jsMain") {
         dependencies {
@@ -45,13 +45,13 @@ kotlin {
             // Без Compose для JS - используем SimpleWebApp
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
         }
-        
+
         iosMain.dependencies {
             implementation(libs.voyager.koin)
         }
@@ -72,7 +72,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.kotlinx.datetime)
         }
-        
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
@@ -115,3 +115,15 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
+// ktlint configuration
+ktlint {
+    android.set(true)
+    ignoreFailures.set(true)
+    reporters {
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+    }
+    filter {
+        exclude("**/generated/**")
+        exclude("**/build/**")
+    }
+}

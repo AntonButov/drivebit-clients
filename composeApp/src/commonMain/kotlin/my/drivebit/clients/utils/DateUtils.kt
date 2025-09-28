@@ -4,27 +4,32 @@ import kotlinx.datetime.*
 import kotlin.time.Duration.Companion.days
 
 object DateUtils {
-    
     /**
      * Вычисляет количество дней между двумя датами
      * @param startDate дата начала
      * @param endDate дата окончания
      * @return количество дней
      */
-    fun calculateDaysBetween(startDate: LocalDate, endDate: LocalDate): Int {
+    fun calculateDaysBetween(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): Int {
         return endDate.toEpochDays() - startDate.toEpochDays()
     }
-    
+
     /**
      * Вычисляет количество дней между двумя датами (включая обе даты)
      * @param startDate дата начала
      * @param endDate дата окончания
      * @return количество дней (включая начальную и конечную даты)
      */
-    fun calculateDaysInclusive(startDate: LocalDate, endDate: LocalDate): Int {
+    fun calculateDaysInclusive(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): Int {
         return calculateDaysBetween(startDate, endDate) + 1
     }
-    
+
     /**
      * Получает текущую дату
      * @return текущая дата
@@ -32,7 +37,7 @@ object DateUtils {
     fun getCurrentDate(): LocalDate {
         return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
     }
-    
+
     /**
      * Проверяет, является ли дата в будущем
      * @param date проверяемая дата
@@ -41,7 +46,7 @@ object DateUtils {
     fun isDateInFuture(date: LocalDate): Boolean {
         return date > getCurrentDate()
     }
-    
+
     /**
      * Проверяет, является ли дата в прошлом
      * @param date проверяемая дата
@@ -50,7 +55,7 @@ object DateUtils {
     fun isDateInPast(date: LocalDate): Boolean {
         return date < getCurrentDate()
     }
-    
+
     /**
      * Форматирует дату для отображения
      * @param date дата для форматирования
@@ -59,18 +64,21 @@ object DateUtils {
     fun formatDate(date: LocalDate): String {
         return "${date.dayOfMonth}.${date.monthNumber}.${date.year}"
     }
-    
+
     /**
      * Форматирует период дат для отображения
      * @param startDate дата начала
      * @param endDate дата окончания
      * @return отформатированная строка периода
      */
-    fun formatDateRange(startDate: LocalDate, endDate: LocalDate): String {
+    fun formatDateRange(
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): String {
         val days = calculateDaysInclusive(startDate, endDate)
         return "${formatDate(startDate)} - ${formatDate(endDate)} ($days ${getDaysText(days)})"
     }
-    
+
     /**
      * Возвращает правильную форму слова "день" в зависимости от количества
      * @param count количество дней
@@ -83,7 +91,7 @@ object DateUtils {
             else -> "дней"
         }
     }
-    
+
     /**
      * Создает LocalDate из строки в формате "dd.MM.yyyy"
      * @param dateString строка с датой
@@ -94,7 +102,9 @@ object DateUtils {
             val parts = dateString.split(".")
             if (parts.size == 3) {
                 LocalDate(parts[2].toInt(), parts[1].toInt(), parts[0].toInt())
-            } else null
+            } else {
+                null
+            }
         } catch (e: Exception) {
             null
         }
