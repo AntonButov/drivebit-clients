@@ -47,6 +47,14 @@ jobs:
         echo "Built index.html header preview:" && \
         head -n 15 composeApp/build/dist/js/productionExecutable/index.html | sed -n '1,15p'
 
+    - name: Copy our custom index.html over generated one
+      run: |
+        echo "📄 Copying our custom index.html over generated one..."
+        cp index.html composeApp/build/dist/js/productionExecutable/index.html
+        echo "✅ Custom index.html copied successfully"
+        echo "📄 Custom index.html header preview:"
+        head -n 15 composeApp/build/dist/js/productionExecutable/index.html | sed -n '1,15p'
+
     - name: Test server connection
       uses: appleboy/ssh-action@v1.0.3
       with:
@@ -120,7 +128,7 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
-        source: "web-demo.html,images/"
+        source: "web-demo.html,images/,index.html"
         target: "/var/www/drivebit-clients"
         strip_components: 0
         overwrite: true
@@ -160,12 +168,19 @@ jobs:
             echo "ℹ️  Files already in correct location"
           fi
           
-          # Verify web-demo.html exists
+          # Verify index.html exists
+          if [ -f "/var/www/drivebit-clients/index.html" ]; then
+            echo "✅ index.html found in correct location"
+          else
+            echo "❌ index.html not found!"
+            exit 1
+          fi
+          
+          # Verify web-demo.html exists (backup)
           if [ -f "/var/www/drivebit-clients/web-demo.html" ]; then
             echo "✅ web-demo.html found in correct location"
           else
-            echo "❌ web-demo.html not found!"
-            exit 1
+            echo "⚠️  web-demo.html not found (optional backup file)"
           fi
           
           # Verify images directory exists
@@ -239,8 +254,15 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_PORT || 22 }}
         script: |
-          test -f /var/www/drivebit-clients/web-demo.html || (echo "❌ web-demo.html missing after upload" && exit 1)
-          grep -o '<title>[^<]*' -m1 /var/www/drivebit-clients/web-demo.html || true
+          test -f /var/www/drivebit-clients/index.html || (echo "❌ index.html missing after upload" && exit 1)
+          echo "📄 Page title from index.html:"
+          grep -o '<title>[^<]*' -m1 /var/www/drivebit-clients/index.html || true
+          echo "📄 Page title from web-demo.html (if exists):"
+          if [ -f "/var/www/drivebit-clients/web-demo.html" ]; then
+            grep -o '<title>[^<]*' -m1 /var/www/drivebit-clients/web-demo.html || true
+          else
+            echo "web-demo.html not found (optional)"
+          fi
 
     - name: Notify deployment success
       if: success()
