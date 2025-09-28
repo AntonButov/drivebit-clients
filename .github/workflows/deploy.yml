@@ -28,6 +28,9 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
+    - name: Clean build cache
+      run: ./gradlew clean --no-daemon
+
     - name: Build JS distribution (fast web version)
       run: ./gradlew :composeApp:jsBrowserDistribution --no-daemon
 
@@ -54,6 +57,24 @@ jobs:
         echo "✅ Custom index.html copied successfully"
         echo "📄 Custom index.html header preview:"
         head -n 15 composeApp/build/dist/js/productionExecutable/index.html | sed -n '1,15p'
+
+    - name: Add cache-busting version to JS files
+      run: |
+        echo "🔄 Adding cache-busting version to JS files..."
+        TIMESTAMP=$(date +%s)
+        echo "Timestamp: $TIMESTAMP"
+        
+        # Update composeApp.js version in index.html
+        sed -i "s/composeApp\.js?v=[0-9]*/composeApp.js?v=$TIMESTAMP/g" composeApp/build/dist/js/productionExecutable/index.html
+        
+        # Rename JS files with timestamp
+        cd composeApp/build/dist/js/productionExecutable
+        if [ -f "composeApp.js" ]; then
+          mv composeApp.js composeApp.js.orig
+          cp composeApp.js.orig composeApp.js
+        fi
+        
+        echo "✅ Cache-busting version added"
 
     - name: Test server connection
       uses: appleboy/ssh-action@v1.0.3
@@ -90,6 +111,12 @@ jobs:
             echo "✅ Running as root"
             SUDO_CMD=""
           fi
+          
+          # Clear nginx cache
+          echo "🧹 Clearing nginx cache..."
+          $SUDO_CMD rm -rf /var/cache/nginx/* 2>/dev/null || true
+          $SUDO_CMD rm -rf /tmp/nginx* 2>/dev/null || true
+          echo "✅ Nginx cache cleared"
           
           # Create backup of current deployment
           if [ -d "/var/www/drivebit-clients" ]; then
@@ -243,8 +270,13 @@ jobs:
           CFG="/etc/nginx/conf.d/drivebit_static.conf"
           echo "⚙️  Ensuring nginx static compression settings in $CFG"
           $SUDO_CMD bash -lc "cat > $CFG <<'CONF'\n# drivebit static compression\ngzip_static on;\n# ensure wasm MIME present (in case not in mime.types)\ntypes { application/wasm wasm; }\nCONF"
+          
+          # Force nginx to reload and clear caches
+          echo "🔄 Forcing nginx reload and cache clear..."
           $SUDO_CMD nginx -t
           $SUDO_CMD systemctl reload nginx
+          $SUDO_CMD systemctl restart nginx
+          echo "✅ Nginx restarted with fresh cache"
 
     - name: Verify deployed page title
       uses: appleboy/ssh-action@v1.0.3
