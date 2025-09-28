@@ -1,5 +1,5 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-// import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -26,36 +26,36 @@ kotlin {
         }
     }
 
-    js(IR) {
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
         browser {
             commonWebpackConfig {
-                cssSupport {
-                    enabled.set(true)
-                }
+                outputFileName = "composeApp.js"
             }
-            binaries.executable()
         }
-    }
-
-    // Исключаем Compose из JS таргета для уменьшения размера бандла
-    sourceSets.getByName("jsMain") {
-        dependencies {
-            implementation(libs.kotlinx.html.js)
-            // Без Koin для JS, используем простую DI
-            // Без Compose для JS - используем SimpleWebApp
-        }
+        binaries.executable()
     }
 
     sourceSets {
         androidMain.dependencies {
+            implementation(project(":Splash"))
+            implementation(project(":Mobile"))
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
         }
 
         iosMain.dependencies {
+            implementation(project(":Splash"))
+            implementation(project(":Mobile"))
             implementation(libs.voyager.koin)
         }
+
+        wasmJsMain.dependencies {
+        }
+
         commonMain.dependencies {
+            implementation(project(":Storage"))
+            implementation(project(":Filters"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -86,12 +86,21 @@ kotlin {
 
 android {
     namespace = "my.drivebit.clients"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "my.drivebit.clients"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.android.targetSdk
+                .get()
+                .toInt()
         versionCode = 1
         versionName = "1.0"
     }

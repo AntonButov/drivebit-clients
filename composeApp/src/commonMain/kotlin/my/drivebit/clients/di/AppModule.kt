@@ -1,9 +1,9 @@
 package my.drivebit.clients.di
 
-import my.drivebit.clients.screens.splash.SplashViewModel
+import my.drivebit.shared.storage.Storage
 import org.koin.dsl.module
 
 val appModule =
     module {
-        factory { SplashViewModel() }
+        single<Storage> { createStorage() }
     }

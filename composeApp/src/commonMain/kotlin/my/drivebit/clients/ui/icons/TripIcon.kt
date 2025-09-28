@@ -11,53 +11,67 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
+import androidx.compose.ui.graphics.StrokeJoin.Companion.Miter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import my.drivebit.clients.theme.BlueRed
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Composable
-fun TripIcon(): ImageVector {
-    return ImageVector.Builder(
-        name = "trip",
-        defaultWidth = 24.dp,
-        defaultHeight = 24.dp,
-        viewportWidth = 24f,
-        viewportHeight = 24f,
-    ).apply {
-        path(
-            fill = SolidColor(BlueRed), fillAlpha = 1f, stroke = null, strokeAlpha = 1f,
-            strokeLineWidth = 1f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 4f, pathFillType = PathFillType.NonZero,
-        ) {
-            moveTo(12f, 2f)
-            curveTo(6.48f, 2f, 2f, 6.48f, 2f, 12f)
-            curveTo(2f, 17.52f, 6.48f, 22f, 12f, 22f)
-            curveTo(17.52f, 22f, 22f, 17.52f, 22f, 12f)
-            curveTo(22f, 6.48f, 17.52f, 2f, 12f, 2f)
-            close()
-            moveTo(12f, 20f)
-            curveTo(7.59f, 20f, 4f, 16.41f, 4f, 12f)
-            curveTo(4f, 7.59f, 7.59f, 4f, 12f, 4f)
-            curveTo(16.41f, 4f, 20f, 7.59f, 20f, 12f)
-            curveTo(20f, 16.41f, 16.41f, 20f, 12f, 20f)
-            close()
-            moveTo(12.5f, 7f)
-            lineTo(11f, 7f)
-            lineTo(11f, 13f)
-            lineTo(16.25f, 16.15f)
-            lineTo(17f, 14.92f)
-            lineTo(12.5f, 12.25f)
-            lineTo(12.5f, 7f)
-            close()
-        }
-    }.build()
-}
+fun TripIcon(): ImageVector =
+    ImageVector
+        .Builder(
+            name = "Trip",
+            defaultWidth = 48.0.dp,
+            defaultHeight = 48.0.dp,
+            viewportWidth = 960.0f,
+            viewportHeight = 960.0f,
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF1f1f1f)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
+            ) {
+                moveTo(212.0f, 748.0f)
+                verticalLineToRelative(-536.0f)
+                horizontalLineToRelative(22.0f)
+                verticalLineToRelative(536.0f)
+                horizontalLineToRelative(-22.0f)
+                close()
+                moveTo(469.0f, 748.0f)
+                verticalLineToRelative(-112.0f)
+                horizontalLineToRelative(22.0f)
+                verticalLineToRelative(112.0f)
+                horizontalLineToRelative(-22.0f)
+                close()
+                moveTo(726.0f, 748.0f)
+                verticalLineToRelative(-536.0f)
+                horizontalLineToRelative(22.0f)
+                verticalLineToRelative(536.0f)
+                horizontalLineToRelative(-22.0f)
+                close()
+                moveTo(469.0f, 536.0f)
+                verticalLineToRelative(-112.0f)
+                horizontalLineToRelative(22.0f)
+                verticalLineToRelative(112.0f)
+                horizontalLineToRelative(-22.0f)
+                close()
+                moveTo(469.0f, 324.0f)
+                verticalLineToRelative(-112.0f)
+                horizontalLineToRelative(22.0f)
+                verticalLineToRelative(112.0f)
+                horizontalLineToRelative(-22.0f)
+                close()
+            }
+        }.build()
 
 @Composable
 @Preview

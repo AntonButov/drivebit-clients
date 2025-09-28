@@ -29,3 +29,7 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
+include(":Filters")
+include(":Storage")
+include(":Splash")
+include(":Mobile")

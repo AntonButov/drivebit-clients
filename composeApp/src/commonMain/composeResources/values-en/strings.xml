@@ -13,4 +13,10 @@
     <string name="phone_confirmation">We'll text you a code to confirm your number.</string>
     <string name="country_code">Country Code</string>
     <string name="log_in">Log in</string>
+    <string name="filter_all">All</string>
+    <string name="filter_airports">Airports</string>
+    <string name="filter_monthly">Monthly</string>
+    <string name="filter_nearby">Nearby</string>
+    <string name="filter_delivered">Delivered</string>
+    <string name="filter_cities">Cities</string>
 </resources>

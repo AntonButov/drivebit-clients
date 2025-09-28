@@ -13,4 +13,10 @@
     <string name="phone_confirmation">Мы отправим вам код для подтверждения номера.</string>
     <string name="country_code">Код страны</string>
     <string name="log_in">Войти</string>
+    <string name="filter_all">Все</string>
+    <string name="filter_airports">Аэропорты</string>
+    <string name="filter_monthly">На месяц</string>
+    <string name="filter_nearby">Рядом</string>
+    <string name="filter_delivered">Доставка</string>
+    <string name="filter_cities">Города</string>
 </resources>
