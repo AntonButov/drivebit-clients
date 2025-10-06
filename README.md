@@ -1,56 +1,177 @@
-# drivebit-clients
-Kotlin Multiplatform Apps for drivebit
+# 🚗 Drivebit Clients
 
-This is a Kotlin Multiplatform project targeting Android, iOS, Web.
+**Modern Kotlin Multiplatform mobile and web applications for Drivebit car rental platform.**
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+[![CI/CD](https://github.com/AntonButov/drivebit-clients/workflows/Fast%20Check/badge.svg)](https://github.com/AntonButov/drivebit-clients/actions)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.2.20-blue.svg)](https://kotlinlang.org/)
+[![Compose Multiplatform](https://img.shields.io/badge/Compose%20Multiplatform-1.9.0-orange.svg)](https://github.com/JetBrains/compose-multiplatform)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## 📱 Supported Platforms
 
-### Build and Run Android Application
+- **Android** - Native Android app with Material Design 3
+- **iOS** - Native iOS app with iOS Human Interface Guidelines
+- **Web** - Modern web app with Compose for Web (WASM)
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+## 🏗️ Architecture
 
-### Build and Run Web Application
+### Modular Structure
+```
+📦 drivebit-clients/
+├── 🎯 composeApp/          # Main application module
+├── 📱 Mobile/              # Mobile-specific UI components
+├── 🎨 Filters/             # Search and filtering functionality
+├── 💾 Storage/             # Cross-platform data storage
+├── 🚀 Splash/              # Splash screen module
+└── 🍎 iosApp/              # iOS app entry point
+```
 
-To build and run the development version of the web app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:jsBrowserDevelopmentRun
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
-  ```
+### Technology Stack
+- **UI Framework:** Compose Multiplatform
+- **Navigation:** Voyager Navigator
+- **Dependency Injection:** Koin (Android/iOS), Manual DI (WASM)
+- **Storage:** Multiplatform Settings
+- **Serialization:** Kotlinx Serialization
+- **Build System:** Gradle with Kotlin DSL
 
-### Build and Run iOS Application
+## 🚀 Quick Start
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+### Prerequisites
+- **JDK 17** or higher
+- **Android Studio** (for Android development)
+- **Xcode** (for iOS development, macOS only)
+- **Node.js 18** (for web development)
+
+### Development Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/AntonButov/drivebit-clients.git
+   cd drivebit-clients
+   ```
+
+2. **Build all modules**
+   ```bash
+   ./gradlew build
+   ```
+
+## 📱 Platform-Specific Builds
+
+### Android
+```bash
+# Debug build
+./gradlew :composeApp:assembleDebug
+
+# Release build
+./gradlew :composeApp:assembleRelease
+
+# Run on device/emulator
+./gradlew :composeApp:installDebug
+```
+
+### iOS
+```bash
+# Build iOS framework
+./gradlew :composeApp:linkDebugFrameworkIosArm64
+
+# Open in Xcode
+open iosApp/iosApp.xcodeproj
+```
+
+### Web (WASM)
+```bash
+# Development server
+./gradlew :composeApp:wasmJsBrowserDevelopmentRun
+
+# Production build
+./gradlew :composeApp:wasmJsBrowserProductionWebpack
+```
+
+## 🧪 Testing & Quality
+
+### Run Tests
+```bash
+# All tests
+./gradlew test
+
+# Specific module
+./gradlew :Storage:test
+```
+
+### Code Quality
+```bash
+# Static analysis
+./gradlew ktlintCheck detekt
+
+# Format code
+./gradlew ktlintFormat
+```
+
+## 🔧 Development Features
+
+### Fast CI/CD
+- **Quick checks:** 5-8 minutes (PR validation)
+- **Full checks:** 25 minutes (main branch only)
+- **Parallel builds:** Android, iOS, WASM simultaneously
+- **Smart caching:** Gradle + Kotlin/Native dependencies
+
+### Code Quality Tools
+- **Ktlint** - Kotlin code style enforcement
+- **Detekt** - Static code analysis
+- **GitHub Dependabot** - Automated dependency updates
+- **Multi-platform testing** - Shared test code across platforms
+
+## 📚 Key Features
+
+### 🎯 Cross-Platform UI
+- **Shared UI code** across Android, iOS, and Web
+- **Platform-specific adaptations** for native look and feel
+- **Responsive design** for different screen sizes
+- **Material Design 3** for Android, iOS HIG for iOS
+
+### 🔍 Search & Filtering
+- **Advanced search** with multiple filter options
+- **Real-time filtering** by location, price, car type
+- **Favorites system** for saved searches
+- **Recent searches** history
+
+### 💾 Data Management
+- **Cross-platform storage** using Multiplatform Settings
+- **Secure token management** for authentication
+- **Offline support** for cached data
+- **Data synchronization** across devices
+
+### 🚀 Performance
+- **Fast CI/CD** with optimized build pipeline
+- **Parallel compilation** for faster builds
+- **Smart caching** for dependencies
+- **Incremental compilation** for development
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Follow Kotlin coding conventions
+- Use meaningful commit messages
+- Add tests for new features
+- Ensure all CI checks pass
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- **Kotlin Multiplatform:** [Documentation](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)
+- **Compose Multiplatform:** [GitHub](https://github.com/JetBrains/compose-multiplatform)
+- **Kotlin/WASM:** [Documentation](https://kotl.in/wasm/)
+- **Issues:** [GitHub Issues](https://github.com/AntonButov/drivebit-clients/issues)
 
 ---
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
-
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
+**Built with ❤️ using Kotlin Multiplatform and Compose Multiplatform**
