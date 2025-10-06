@@ -10,7 +10,7 @@
         android:theme="@style/Theme.Drivebit">
         <activity
             android:exported="true"
-            android:name=".MainActivity">
+            android:name="my.drivebit.clients.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

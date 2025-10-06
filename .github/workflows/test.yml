@@ -2,9 +2,9 @@ name: Fast Check
 
 on:
   pull_request:
-    branches: [ main, trunk ]
+    branches: [ trunk ]
   push:
-    branches: [ main, trunk ]
+    branches: [ trunk ]
 
 jobs:
   # Супер-быстрая проверка (только самое важное)
@@ -33,6 +33,19 @@ jobs:
         key: fast-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           fast-gradle-
+          gradle-
+
+    - name: Cache build outputs
+      uses: actions/cache@v4
+      with:
+        path: |
+          build/
+          .gradle/
+          ~/.gradle/build-cache/
+        key: fast-build-${{ hashFiles('**/*.kt', '**/*.gradle*') }}
+        restore-keys: |
+          fast-build-
+          build-
 
     - name: Make gradlew executable
       run: chmod +x ./gradlew
@@ -42,9 +55,6 @@ jobs:
 
     - name: Quick Android builds (all modules)
       run: ./gradlew compileDebugKotlinAndroid --no-daemon --stacktrace --parallel
-
-    - name: Quick WASM builds (all modules)
-      run: ./gradlew compileKotlinWasmJs --no-daemon --stacktrace --parallel
 
     - name: Quick JS builds (all modules)
       run: ./gradlew compileKotlinJs --no-daemon --stacktrace --parallel
@@ -75,6 +85,19 @@ jobs:
         key: macos-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           macos-gradle-
+          gradle-
+
+    - name: Cache build outputs
+      uses: actions/cache@v4
+      with:
+        path: |
+          build/
+          .gradle/
+          ~/.gradle/build-cache/
+        key: macos-build-${{ hashFiles('**/*.kt', '**/*.gradle*') }}
+        restore-keys: |
+          macos-build-
+          build-
 
     - name: Cache Kotlin/Native dependencies
       uses: actions/cache@v4
@@ -93,13 +116,23 @@ jobs:
     - name: Quick iOS Simulator builds (all modules)
       run: ./gradlew compileKotlinIosSimulatorArm64 --no-daemon --stacktrace --parallel
 
-  # Полная проверка только для main/trunk (в фоне)
-  full-check:
-    name: Full Check
+  # Параллельная проверка модулей (каждый модуль - отдельная джоба)
+  check-modules:
+    name: Check ${{ matrix.module }}
     runs-on: ubuntu-latest
-    timeout-minutes: 25
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/trunk'
+    timeout-minutes: 15
     needs: [fast-check, ios-check]
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - Storage
+          - Splash
+          - Mobile
+          - Auth
+          - UI-Components
+          - CommonViewModels
+          - composeApp
 
     steps:
     - name: Checkout
@@ -111,11 +144,6 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v5
-      with:
-        node-version: '18'
-
     - name: Cache Gradle packages
       uses: actions/cache@v4
       with:
@@ -123,23 +151,25 @@ jobs:
           ~/.gradle/caches
           ~/.gradle/wrapper
           ~/.gradle/daemon
-        key: full-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        key: check-gradle-${{ matrix.module }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
-          full-gradle-
+          check-gradle-${{ matrix.module }}-
+          gradle-
 
-    - name: Cache Kotlin/Native dependencies
+    - name: Cache build outputs
       uses: actions/cache@v4
       with:
-        path: ~/.konan
-        key: full-konan-${{ hashFiles('**/*.gradle*') }}
+        path: |
+          build/
+          .gradle/
+          ~/.gradle/build-cache/
+        key: check-build-${{ matrix.module }}-${{ hashFiles('**/*.kt', '**/*.gradle*') }}
         restore-keys: |
-          full-konan-
+          check-build-${{ matrix.module }}-
+          build-
 
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - name: Run tests
-      run: ./gradlew test --no-daemon --stacktrace --parallel
-
-    - name: Build all modules
-      run: ./gradlew assembleDebug --no-daemon --stacktrace --parallel
+    - name: Check ${{ matrix.module }}
+      run: ./gradlew :${{ matrix.module }}:check --no-daemon --stacktrace

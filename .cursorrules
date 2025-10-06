@@ -28,4 +28,8 @@ This is a Kotlin Multiplatform project for Drivebit mobile clients targeting And
 - SSH: `ssh root@143.198.69.242`
 
 ## Development Workflow
-- After every change, run tests: `./gradlew check`
+- No need to run full checks locally - push to CI instead
+- CI will run all tests and checks automatically on GitHub Actions
+- For quick local verification (optional): `./gradlew :ModuleName:check`
+- NEVER run `./gradlew clean` without explicit user permission
+- Cache cleaning should only be done when user specifically requests it

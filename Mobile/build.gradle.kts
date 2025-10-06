@@ -34,12 +34,15 @@ kotlin {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.tabs)
             implementation(libs.voyager.screenmodel)
+            implementation(libs.voyager.koin)
 
             implementation(libs.koin.compose)
             implementation(libs.koin.core)
 
             implementation(project(":Splash"))
             implementation(project(":Storage"))
+            implementation(project(":Auth"))
+            implementation(project(":UI-Components"))
         }
 
         androidMain.dependencies {
@@ -49,7 +52,7 @@ kotlin {
 }
 
 android {
-    namespace = "my.drivebit.clients.mobile"
+    namespace = "my.drivebit.mobile.mobile"
     compileSdk =
         libs.versions.android.compileSdk
             .get()

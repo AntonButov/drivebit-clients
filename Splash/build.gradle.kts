@@ -26,6 +26,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(libs.voyager.screenmodel)
+            implementation(libs.koin.core)
         }
         androidMain.dependencies {
         }

@@ -7,16 +7,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import cafe.adriel.voyager.navigator.Navigator
-import my.drivebit.clients.di.appModule
-import my.drivebit.clients.di.platformModule
-import my.drivebit.clients.screens.main.MainScreen
-import my.drivebit.clients.theme.DrivebitTheme
+import my.drivebit.mobile.di.mobileModule
+import my.drivebit.mobile.screens.main.MainScreen
+import my.drivebit.shared.storage.di.storageModule
+import my.drivebit.ui.theme.DrivebitTheme
 import org.koin.compose.KoinApplication
 import org.koin.dsl.module
 
 @Composable
 actual fun App() {
-    val context = LocalContext.current
+    val context = LocalContext.current.applicationContext
 
     DrivebitTheme {
         KoinApplication(application = {
@@ -24,8 +24,8 @@ actual fun App() {
                 module {
                     single<Context> { context }
                 },
-                appModule,
-                platformModule,
+                storageModule,
+                mobileModule,
             )
         }) {
             Box(modifier = Modifier.fillMaxSize()) {
