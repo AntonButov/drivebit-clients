@@ -1,6 +1,5 @@
 package my.drivebit.clients.ui.icons
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 // Re-export all icons from their individual files
@@ -12,25 +11,25 @@ import my.drivebit.clients.ui.icons.FavoriteIcon as FavoriteIconImpl
 import my.drivebit.clients.ui.icons.TripIcon as TripIconImpl
 import my.drivebit.clients.ui.icons.InboxIcon as InboxIconImpl
 import my.drivebit.clients.ui.icons.MoreIcon as MoreIconImpl
-import my.drivebit.clients.ui.icons.RoadIcon as RoadIconImpl
+import my.drivebit.clients.ui.icons.ArrowBackIcon as ArrowBackIconImpl
 
 // Custom icons using Compose Drawable
 object Icons {
     val SearchIcon: ImageVector
-        @Composable get() = SearchIconImpl()
+        get() = SearchIconImpl()
 
     val FavoriteIcon: ImageVector
-        @Composable get() = FavoriteIconImpl()
+        get() = FavoriteIconImpl()
 
     val TripIcon: ImageVector
-        @Composable get() = TripIconImpl()
+        get() = TripIconImpl()
 
     val InboxIcon: ImageVector
-        @Composable get() = InboxIconImpl()
+        get() = InboxIconImpl()
 
     val MoreIcon: ImageVector
-        @Composable get() = MoreIconImpl()
+        get() = MoreIconImpl()
 
-    val RoadIcon: ImageVector
-        @Composable get() = RoadIconImpl()
+    val ArrowBackIcon: ImageVector
+        get() = ArrowBackIconImpl()
 }

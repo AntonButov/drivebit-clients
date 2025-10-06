@@ -1,8 +1,8 @@
 package my.drivebit.clients.theme
 
 object WebTheme {
-    fun getWebStyles(): String {
-        return """
+    fun getWebStyles(): String =
+        """
         * {
             margin: 0;
             padding: 0;
@@ -501,10 +501,9 @@ object WebTheme {
             }
         }
         """
-    }
 
-    fun getWebScripts(): String {
-        return """
+    fun getWebScripts(): String =
+        """
         // Установка минимальной даты
         const today = new Date().toISOString().split('T')[0];
         const startDateInput = document.getElementById('start-date');
@@ -536,5 +535,4 @@ object WebTheme {
             });
         });
         """
-    }
 }

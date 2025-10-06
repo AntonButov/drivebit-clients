@@ -71,8 +71,9 @@ sudo chown -R $USER:$USER /var/www/drivebit-clients
 ## How It Works
 
 1. **Trigger**: Deployment runs when:
-   - Code is pushed to `trunk` branch
-   - Pull request is merged to `trunk` (after check workflow succeeds)
+   - A new release is published on GitHub
+   - Release must be created manually or via automation
+   - This ensures only stable, tested versions are deployed
 
 2. **Build Process**:
    - Builds JS distribution: `./gradlew :composeApp:jsBrowserDistribution`
@@ -90,9 +91,40 @@ sudo chown -R $USER:$USER /var/www/drivebit-clients
    - Sets up caching for static assets
    - Configures SPA routing (fallback to index.html)
 
+## Creating Releases
+
+### Manual Release Creation
+
+1. **Go to GitHub Releases**:
+   - Navigate to your repository on GitHub
+   - Click "Releases" → "Create a new release"
+
+2. **Fill Release Information**:
+   - **Tag version**: e.g., `v1.0.0`, `v1.2.3`
+   - **Release title**: e.g., "Version 1.0.0"
+   - **Description**: Describe changes and new features
+   - **Target**: Select the branch (usually `trunk`)
+
+3. **Publish Release**:
+   - Click "Publish release"
+   - This will automatically trigger deployment
+
+### Automated Release Creation
+
+You can also create releases programmatically:
+
+```bash
+# Create a release using GitHub CLI
+gh release create v1.0.0 --title "Version 1.0.0" --notes "Release notes here"
+
+# Or using git tags
+git tag v1.0.0
+git push origin v1.0.0
+```
+
 ## Manual Deployment
 
-To deploy manually:
+To deploy manually (bypassing release trigger):
 
 ```bash
 # Build the project

@@ -1,4 +1,4 @@
-name: Check
+name: Fast Check
 
 on:
   pull_request:
@@ -7,14 +7,93 @@ on:
     branches: [ main, trunk ]
 
 jobs:
-  check:
-    name: Check on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+  # Супер-быстрая проверка (только самое важное)
+  fast-check:
+    name: Fast Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+          ~/.gradle/daemon
+        key: fast-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          fast-gradle-
+
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+
+    - name: Quick static analysis
+      run: ./gradlew ktlintCheck --no-daemon --stacktrace --parallel
+
+    - name: Quick Android build
+      run: ./gradlew :composeApp:compileDebugKotlinAndroid --no-daemon --stacktrace --parallel
+
+    - name: Quick WASM build
+      run: ./gradlew :composeApp:compileKotlinWasmJs --no-daemon --stacktrace --parallel
+
+  # iOS проверка (только на macOS, параллельно)
+  ios-check:
+    name: iOS Check
+    runs-on: macos-latest
+    timeout-minutes: 10
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+          ~/.gradle/daemon
+        key: macos-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          macos-gradle-
+
+    - name: Cache Kotlin/Native dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.konan
+        key: macos-konan-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          macos-konan-
+
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+
+    - name: Quick iOS build
+      run: ./gradlew :composeApp:compileKotlinIosArm64 --no-daemon --stacktrace --parallel
+
+  # Полная проверка только для main/trunk (в фоне)
+  full-check:
+    name: Full Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/trunk'
+    needs: [fast-check, ios-check]
 
     steps:
     - name: Checkout
@@ -37,32 +116,29 @@ jobs:
         path: |
           ~/.gradle/caches
           ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          ~/.gradle/daemon
+        key: full-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
-          ${{ runner.os }}-gradle-
+          full-gradle-
 
     - name: Cache Kotlin/Native dependencies
       uses: actions/cache@v4
       with:
         path: ~/.konan
-        key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}
+        key: full-konan-${{ hashFiles('**/*.gradle*') }}
         restore-keys: |
-          ${{ runner.os }}-konan-
+          full-konan-
 
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - name: Run checks
-      run: ./gradlew check --no-daemon --stacktrace -x testDebugUnitTest -x testReleaseUnitTest
+    - name: Run tests
+      run: ./gradlew test --no-daemon --stacktrace --parallel
 
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: check-results-${{ matrix.os }}
-        path: |
-          composeApp/build/reports/
-          composeApp/build/test-results/
-        retention-days: 7
-
-
+    - name: Build all modules
+      run: |
+        ./gradlew :composeApp:assembleDebug --no-daemon --stacktrace --parallel
+        ./gradlew :Storage:assembleDebug --no-daemon --stacktrace --parallel
+        ./gradlew :Filters:assembleDebug --no-daemon --stacktrace --parallel
+        ./gradlew :Mobile:assembleDebug --no-daemon --stacktrace --parallel
+        ./gradlew :Splash:assembleDebug --no-daemon --stacktrace --parallel

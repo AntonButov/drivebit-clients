@@ -12,50 +12,125 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.StrokeCap.Companion.Butt
+import androidx.compose.ui.graphics.StrokeJoin.Companion.Miter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Composable
-fun MoreIcon(): ImageVector {
-    return ImageVector.Builder(
-        name = "more",
-        defaultWidth = 24.dp,
-        defaultHeight = 24.dp,
-        viewportWidth = 24f,
-        viewportHeight = 24f,
-    ).apply {
-        path(
-            fill = SolidColor(Color.Black), fillAlpha = 1f, stroke = null, strokeAlpha = 1f,
-            strokeLineWidth = 1f, strokeLineCap = StrokeCap.Butt, strokeLineJoin = StrokeJoin.Miter,
-            strokeLineMiter = 4f, pathFillType = PathFillType.NonZero,
-        ) {
-            moveTo(12f, 8f)
-            curveTo(10.9f, 8f, 10f, 7.1f, 10f, 6f)
-            curveTo(10f, 4.9f, 10.9f, 4f, 12f, 4f)
-            curveTo(13.1f, 4f, 14f, 4.9f, 14f, 6f)
-            curveTo(14f, 7.1f, 13.1f, 8f, 12f, 8f)
-            close()
-            moveTo(12f, 10f)
-            curveTo(13.1f, 10f, 14f, 10.9f, 14f, 12f)
-            curveTo(14f, 13.1f, 13.1f, 14f, 12f, 14f)
-            curveTo(10.9f, 14f, 10f, 13.1f, 10f, 12f)
-            curveTo(10f, 10.9f, 10.9f, 10f, 12f, 10f)
-            close()
-            moveTo(12f, 16f)
-            curveTo(13.1f, 16f, 14f, 16.9f, 14f, 18f)
-            curveTo(14f, 19.1f, 13.1f, 20f, 12f, 20f)
-            curveTo(10.9f, 20f, 10f, 19.1f, 10f, 18f)
-            curveTo(10f, 16.9f, 10.9f, 16f, 12f, 16f)
-            close()
-        }
-    }.build()
-}
+fun MoreIcon(): ImageVector =
+    ImageVector
+        .Builder(
+            name = "More",
+            defaultWidth = 48.0.dp,
+            defaultHeight = 48.0.dp,
+            viewportWidth = 960.0f,
+            viewportHeight = 960.0f,
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF1f1f1f)),
+                stroke = null,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
+            ) {
+                moveTo(236.0f, 760.0f)
+                quadToRelative(-14.5f, 0.0f, -25.25f, -10.75f)
+                reflectiveQuadTo(200.0f, 724.0f)
+                quadToRelative(0.0f, -14.5f, 10.75f, -25.25f)
+                reflectiveQuadTo(236.0f, 688.0f)
+                quadToRelative(14.5f, 0.0f, 25.25f, 10.75f)
+                reflectiveQuadTo(272.0f, 724.0f)
+                quadToRelative(0.0f, 14.5f, -10.75f, 25.25f)
+                reflectiveQuadTo(236.0f, 760.0f)
+                close()
+                moveTo(480.0f, 760.0f)
+                quadToRelative(-14.5f, 0.0f, -25.25f, -10.75f)
+                reflectiveQuadTo(444.0f, 724.0f)
+                quadToRelative(0.0f, -14.5f, 10.75f, -25.25f)
+                reflectiveQuadTo(480.0f, 688.0f)
+                quadToRelative(14.5f, 0.0f, 25.25f, 10.75f)
+                reflectiveQuadTo(516.0f, 724.0f)
+                quadToRelative(0.0f, 14.5f, -10.75f, 25.25f)
+                reflectiveQuadTo(480.0f, 760.0f)
+                close()
+                moveTo(724.0f, 760.0f)
+                quadToRelative(-14.5f, 0.0f, -25.25f, -10.75f)
+                reflectiveQuadTo(688.0f, 724.0f)
+                quadToRelative(0.0f, -14.5f, 10.75f, -25.25f)
+                reflectiveQuadTo(724.0f, 688.0f)
+                quadToRelative(14.5f, 0.0f, 25.25f, 10.75f)
+                reflectiveQuadTo(760.0f, 724.0f)
+                quadToRelative(0.0f, 14.5f, -10.75f, 25.25f)
+                reflectiveQuadTo(724.0f, 760.0f)
+                close()
+                moveTo(236.0f, 516.0f)
+                quadToRelative(-14.5f, 0.0f, -25.25f, -10.75f)
+                reflectiveQuadTo(200.0f, 480.0f)
+                quadToRelative(0.0f, -14.5f, 10.75f, -25.25f)
+                reflectiveQuadTo(236.0f, 444.0f)
+                quadToRelative(14.5f, 0.0f, 25.25f, 10.75f)
+                reflectiveQuadTo(272.0f, 480.0f)
+                quadToRelative(0.0f, 14.5f, -10.75f, 25.25f)
+                reflectiveQuadTo(236.0f, 516.0f)
+                close()
+                moveTo(480.0f, 516.0f)
+                quadToRelative(-14.5f, 0.0f, -25.25f, -10.75f)
+                reflectiveQuadTo(444.0f, 480.0f)
+                quadToRelative(0.0f, -14.5f, 10.75f, -25.25f)
+                reflectiveQuadTo(480.0f, 444.0f)
+                quadToRelative(14.5f, 0.0f, 25.25f, 10.75f)
+                reflectiveQuadTo(516.0f, 480.0f)
+                quadToRelative(0.0f, 14.5f, -10.75f, 25.25f)
+                reflectiveQuadTo(480.0f, 516.0f)
+                close()
+                moveTo(724.0f, 516.0f)
+                quadToRelative(-14.5f, 0.0f, -25.25f, -10.75f)
+                reflectiveQuadTo(688.0f, 480.0f)
+                quadToRelative(0.0f, -14.5f, 10.75f, -25.25f)
+                reflectiveQuadTo(724.0f, 444.0f)
+                quadToRelative(14.5f, 0.0f, 25.25f, 10.75f)
+                reflectiveQuadTo(760.0f, 480.0f)
+                quadToRelative(0.0f, 14.5f, -10.75f, 25.25f)
+                reflectiveQuadTo(724.0f, 516.0f)
+                close()
+                moveTo(236.0f, 272.0f)
+                quadToRelative(-14.5f, 0.0f, -25.25f, -10.75f)
+                reflectiveQuadTo(200.0f, 236.0f)
+                quadToRelative(0.0f, -14.5f, 10.75f, -25.25f)
+                reflectiveQuadTo(236.0f, 200.0f)
+                quadToRelative(14.5f, 0.0f, 25.25f, 10.75f)
+                reflectiveQuadTo(272.0f, 236.0f)
+                quadToRelative(0.0f, 14.5f, -10.75f, 25.25f)
+                reflectiveQuadTo(236.0f, 272.0f)
+                close()
+                moveTo(480.0f, 272.0f)
+                quadToRelative(-14.5f, 0.0f, -25.25f, -10.75f)
+                reflectiveQuadTo(444.0f, 236.0f)
+                quadToRelative(0.0f, -14.5f, 10.75f, -25.25f)
+                reflectiveQuadTo(480.0f, 200.0f)
+                quadToRelative(14.5f, 0.0f, 25.25f, 10.75f)
+                reflectiveQuadTo(516.0f, 236.0f)
+                quadToRelative(0.0f, 14.5f, -10.75f, 25.25f)
+                reflectiveQuadTo(480.0f, 272.0f)
+                close()
+                moveTo(724.0f, 272.0f)
+                quadToRelative(-14.5f, 0.0f, -25.25f, -10.75f)
+                reflectiveQuadTo(688.0f, 236.0f)
+                quadToRelative(0.0f, -14.5f, 10.75f, -25.25f)
+                reflectiveQuadTo(724.0f, 200.0f)
+                quadToRelative(14.5f, 0.0f, 25.25f, 10.75f)
+                reflectiveQuadTo(760.0f, 236.0f)
+                quadToRelative(0.0f, 14.5f, -10.75f, 25.25f)
+                reflectiveQuadTo(724.0f, 272.0f)
+                close()
+            }
+        }.build()
 
 @Composable
 @Preview
