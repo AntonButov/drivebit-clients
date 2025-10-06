@@ -11,7 +11,7 @@ jobs:
   fast-check:
     name: Fast Check
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
 
     steps:
     - name: Checkout
@@ -40,17 +40,20 @@ jobs:
     - name: Quick static analysis
       run: ./gradlew ktlintCheck --no-daemon --stacktrace --parallel
 
-    - name: Quick Android build
-      run: ./gradlew :composeApp:compileDebugKotlinAndroid --no-daemon --stacktrace --parallel
+    - name: Quick Android builds (all modules)
+      run: ./gradlew compileDebugKotlinAndroid --no-daemon --stacktrace --parallel
 
-    - name: Quick WASM build
-      run: ./gradlew :composeApp:compileKotlinWasmJs --no-daemon --stacktrace --parallel
+    - name: Quick WASM builds (all modules)
+      run: ./gradlew compileKotlinWasmJs --no-daemon --stacktrace --parallel
+
+    - name: Quick JS builds (all modules)
+      run: ./gradlew compileKotlinJs --no-daemon --stacktrace --parallel
 
   # iOS проверка (только на macOS, параллельно)
   ios-check:
     name: iOS Check
     runs-on: macos-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
     - name: Checkout
@@ -84,8 +87,11 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - name: Quick iOS build
-      run: ./gradlew :composeApp:compileKotlinIosArm64 --no-daemon --stacktrace --parallel
+    - name: Quick iOS builds (all modules)
+      run: ./gradlew compileKotlinIosArm64 --no-daemon --stacktrace --parallel
+
+    - name: Quick iOS Simulator builds (all modules)
+      run: ./gradlew compileKotlinIosSimulatorArm64 --no-daemon --stacktrace --parallel
 
   # Полная проверка только для main/trunk (в фоне)
   full-check:
@@ -136,9 +142,4 @@ jobs:
       run: ./gradlew test --no-daemon --stacktrace --parallel
 
     - name: Build all modules
-      run: |
-        ./gradlew :composeApp:assembleDebug --no-daemon --stacktrace --parallel
-        ./gradlew :Storage:assembleDebug --no-daemon --stacktrace --parallel
-        ./gradlew :Filters:assembleDebug --no-daemon --stacktrace --parallel
-        ./gradlew :Mobile:assembleDebug --no-daemon --stacktrace --parallel
-        ./gradlew :Splash:assembleDebug --no-daemon --stacktrace --parallel
+      run: ./gradlew assembleDebug --no-daemon --stacktrace --parallel
