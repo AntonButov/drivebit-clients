@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.ktlint) apply true
+    id("io.gitlab.arturbosch.detekt") version "1.23.4" apply true
 }
 
 private val ktLintConfig: org.jlleitschuh.gradle.ktlint.KtlintExtension.() -> Unit = {
@@ -24,6 +25,7 @@ private val ktLintConfig: org.jlleitschuh.gradle.ktlint.KtlintExtension.() -> Un
 
 subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    apply(plugin = "io.gitlab.arturbosch.detekt")
 
     tasks.matching { it.name == "test" || it.name == "build" }.configureEach {
         dependsOn("ktlintFormat")
@@ -31,6 +33,13 @@ subprojects {
 
     ktlint {
         ktLintConfig()
+    }
+
+    detekt {
+        buildUponDefaultConfig = true
+        allRules = false
+        config.setFrom("$rootDir/detekt.yml")
+        baseline = file("$rootDir/detekt-baseline.xml")
     }
 }
 
