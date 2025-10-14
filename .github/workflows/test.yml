@@ -121,7 +121,6 @@ jobs:
     name: Check ${{ matrix.module }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [fast-check, ios-check]
     strategy:
       fail-fast: false
       matrix:
