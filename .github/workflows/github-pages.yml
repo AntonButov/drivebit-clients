@@ -1,26 +1,20 @@
-name: Deploy to GitHub Pages (Simple)
+name: Deploy to gh-pages
 
 on:
   push:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  contents: write
 
 jobs:
-  build:
-    name: Build and Deploy
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
     - name: Setup JDK 17
       uses: actions/setup-java@v5
@@ -46,59 +40,45 @@ jobs:
     - name: Build JS distribution
       run: |
         echo "🔨 Building JS distribution..."
-        ./gradlew :composeApp:jsBrowserDistribution --no-daemon --stacktrace
+        ./gradlew :composeApp:jsBrowserDistribution --no-daemon
         echo "✅ Build completed"
-        
-        echo "📁 Checking build output..."
-        if [ -d "composeApp/build/dist/js/productionExecutable" ]; then
-          echo "✅ Build directory exists"
-          ls -la composeApp/build/dist/js/productionExecutable/
-        else
-          echo "❌ Build directory not found!"
-          find composeApp/build -name "*dist*" -type d 2>/dev/null || echo "No dist directories found"
-          exit 1
-        fi
 
-    - name: Prepare deployment
+    - name: Prepare dist directory
       run: |
-        echo "📦 Preparing deployment..."
+        echo "📦 Preparing dist directory..."
         
-        # Create deployment directory
-        mkdir -p pages_build
+        # Create dist directory
+        mkdir -p dist
         
         # Copy built files
-        cp -r composeApp/build/dist/js/productionExecutable/* pages_build/
+        cp -r composeApp/build/dist/js/productionExecutable/* dist/
         
         # Copy custom files
         if [ -f "index.html" ]; then
-          cp index.html pages_build/
+          cp index.html dist/
           echo "✅ Copied custom index.html"
         fi
         
         if [ -d "images" ]; then
-          cp -r images pages_build/
+          cp -r images dist/
           echo "✅ Copied images"
         fi
         
         # Add .nojekyll
-        touch pages_build/.nojekyll
+        touch dist/.nojekyll
         
-        echo "📁 Deployment files:"
-        ls -la pages_build/
+        echo "📁 Dist files:"
+        ls -la dist/
 
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
-
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+    - name: Deploy to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        path: 'pages_build'
-
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: ./dist
+        force_orphan: true
 
     - name: Success notification
       run: |
-        echo "✅ Successfully deployed to GitHub Pages!"
-        echo "🌐 URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "✅ Successfully deployed to gh-pages branch!"
+        echo "🌐 Your site will be available at: https://antonbutov.github.io/drivebit-clients/"
