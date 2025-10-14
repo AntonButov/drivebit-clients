@@ -1,0 +1,38 @@
+# Kotzilla Configuration
+# https://docs.kotzilla.io/
+
+# Project information
+project:
+  name: "Drivebit Clients"
+  id: "drivebit-clients"
+
+# Koin configuration validation
+koin:
+  # Enable module validation at build time
+  validate: true
+  
+  # Modules to validate
+  modules:
+    - "my.drivebit.clients.di.appModule"
+    - "my.drivebit.clients.di.platformModule"
+    - "my.drivebit.auth.di.authModule"
+  
+  # Enable runtime monitoring (only in debug builds)
+  monitoring:
+    enabled: true
+    debug_only: true
+
+# Telemetry settings
+telemetry:
+  # Send telemetry to Kotzilla cloud
+  # Set to false if you don't want to use cloud features
+  enabled: false
+  
+# Build validation
+build:
+  # Fail build on Koin configuration errors
+  fail_on_error: true
+  
+  # Show warnings for potential issues
+  show_warnings: true
+

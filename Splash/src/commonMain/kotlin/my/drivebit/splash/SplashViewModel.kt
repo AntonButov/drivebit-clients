@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 class SplashViewModel : StateScreenModel<SplashState>(SplashState.Init) {
     init {
         screenModelScope.launch {
+            mutableState.value = SplashState.Loading
             delay(2000)
             mutableState.value = SplashState.Loaded
         }

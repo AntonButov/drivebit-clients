@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="log_in">Log In</string>
+    <string name="country_code">Country Code</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="phone_confirmation">We'll send you a confirmation code</string>
+    <string name="country_russia">Russia</string>
+    <string name="country_united_states">United States</string>
+    <string name="country_kazakhstan">Kazakhstan</string>
+</resources>

@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -26,8 +25,7 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
+    js(IR) {
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
@@ -40,23 +38,9 @@ kotlin {
         androidMain.dependencies {
             implementation(project(":Splash"))
             implementation(project(":Mobile"))
+            implementation(project(":Auth"))
+            implementation(project(":UI-Components"))
             implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-        }
-
-        iosMain.dependencies {
-            implementation(project(":Splash"))
-            implementation(project(":Mobile"))
-            implementation(libs.voyager.koin)
-        }
-
-        wasmJsMain.dependencies {
-        }
-
-        commonMain.dependencies {
-            implementation(project(":Storage"))
-            implementation(project(":Filters"))
-            implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
@@ -68,13 +52,48 @@ kotlin {
             implementation(libs.voyager.screenmodel)
             implementation(libs.voyager.tabs)
             implementation(libs.voyager.koin)
-            implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.androidx.activity.compose)
+        }
+
+        iosMain.dependencies {
+            implementation(project(":Splash"))
+            implementation(project(":Mobile"))
+            implementation(project(":Auth"))
+            implementation(project(":UI-Components"))
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.androidx.lifecycle.viewmodelCompose)
+            implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenmodel)
+            implementation(libs.voyager.tabs)
+            implementation(libs.voyager.koin)
+            implementation(libs.koin.compose)
+        }
+
+        jsMain.dependencies {
+            implementation(compose.html.core)
+            implementation(compose.runtime)
+            implementation(project(":Storage"))
+            implementation(project(":CommonViewModels"))
+            implementation(libs.koin.core)
+        }
+
+        commonMain.dependencies {
+            implementation(project(":Storage"))
+            implementation(compose.runtime)
+            implementation(libs.koin.core)
             implementation(libs.kotlinx.datetime)
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.koin.core)
+            implementation(libs.koin.test)
         }
         androidUnitTest.dependencies {
             implementation(libs.kotlin.testJunit)
@@ -85,7 +104,7 @@ kotlin {
 }
 
 android {
-    namespace = "my.drivebit.clients"
+    namespace = "my.drivebit.mobile"
     compileSdk =
         libs.versions.android.compileSdk
             .get()
