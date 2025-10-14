@@ -2,7 +2,7 @@ name: Deploy to gh-pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ trunk ]
   workflow_dispatch:
 
 permissions:
@@ -11,7 +11,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -46,27 +46,27 @@ jobs:
     - name: Prepare dist directory
       run: |
         echo "📦 Preparing dist directory..."
-        
+
         # Create dist directory
         mkdir -p dist
-        
+
         # Copy built files
         cp -r composeApp/build/dist/js/productionExecutable/* dist/
-        
+
         # Copy custom files
         if [ -f "index.html" ]; then
           cp index.html dist/
           echo "✅ Copied custom index.html"
         fi
-        
+
         if [ -d "images" ]; then
           cp -r images dist/
           echo "✅ Copied images"
         fi
-        
+
         # Add .nojekyll
         touch dist/.nojekyll
-        
+
         echo "📁 Dist files:"
         ls -la dist/
 
