@@ -2,7 +2,6 @@ name: Deploy to GitHub Pages (Simple)
 
 on:
   push:
-    branches: [ github-pages-setup, trunk, main, master ]
   workflow_dispatch:
 
 permissions:
@@ -45,7 +44,20 @@ jobs:
       run: chmod +x ./gradlew
 
     - name: Build JS distribution
-      run: ./gradlew :composeApp:jsBrowserDistribution --no-daemon
+      run: |
+        echo "🔨 Building JS distribution..."
+        ./gradlew :composeApp:jsBrowserDistribution --no-daemon --stacktrace
+        echo "✅ Build completed"
+        
+        echo "📁 Checking build output..."
+        if [ -d "composeApp/build/dist/js/productionExecutable" ]; then
+          echo "✅ Build directory exists"
+          ls -la composeApp/build/dist/js/productionExecutable/
+        else
+          echo "❌ Build directory not found!"
+          find composeApp/build -name "*dist*" -type d 2>/dev/null || echo "No dist directories found"
+          exit 1
+        fi
 
     - name: Prepare deployment
       run: |
