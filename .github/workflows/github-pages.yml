@@ -81,20 +81,39 @@ jobs:
         DIST_DIR="composeApp/build/dist/js/productionExecutable"
         PAGES_DIR="pages_build"
         
+        echo "🔍 Checking if build directory exists..."
+        if [ ! -d "$DIST_DIR" ]; then
+          echo "❌ Build directory not found: $DIST_DIR"
+          echo "📁 Available directories:"
+          find composeApp/build -type d -name "*dist*" 2>/dev/null || echo "No dist directories found"
+          exit 1
+        fi
+        
+        echo "✅ Build directory found"
         mkdir -p "$PAGES_DIR"
         
+        echo "📂 Copying built files..."
         cp -r "$DIST_DIR"/* "$PAGES_DIR"/
         
         echo "📄 Copying custom index.html..."
-        cp index.html "$PAGES_DIR"/index.html
+        if [ -f "index.html" ]; then
+          cp index.html "$PAGES_DIR"/index.html
+          echo "✅ Custom index.html copied"
+        else
+          echo "⚠️ index.html not found in root, using generated one"
+        fi
         
         echo "🖼️ Copying images..."
         if [ -d "images" ]; then
           cp -r images "$PAGES_DIR"/
+          echo "✅ Images copied"
+        else
+          echo "⚠️ Images directory not found"
         fi
         
         if [ -f "web-demo.html" ]; then
           cp web-demo.html "$PAGES_DIR"/
+          echo "✅ web-demo.html copied"
         fi
         
         echo "🚫 Adding .nojekyll file..."
@@ -107,6 +126,16 @@ jobs:
         echo "✅ Content prepared"
         echo "📁 Files in pages_build:"
         ls -la "$PAGES_DIR"
+        
+        echo "🔍 Verifying index.html exists..."
+        if [ -f "$PAGES_DIR/index.html" ]; then
+          echo "✅ index.html exists"
+          echo "📄 First few lines of index.html:"
+          head -5 "$PAGES_DIR/index.html"
+        else
+          echo "❌ index.html not found in pages_build!"
+          exit 1
+        fi
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
@@ -124,6 +153,8 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Notify deployment success
         if: success()
