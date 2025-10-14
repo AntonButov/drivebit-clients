@@ -155,3 +155,14 @@ ktlint {
         exclude("**/build/**")
     }
 }
+
+// Копирование статических ресурсов для веб-версии
+tasks.register<Copy>("copyWebResources") {
+    from("../../images")
+    into("build/processedResources/js/main")
+    dependsOn("jsProcessResources")
+}
+
+tasks.named("jsBrowserDevelopmentRun") {
+    dependsOn("copyWebResources")
+}

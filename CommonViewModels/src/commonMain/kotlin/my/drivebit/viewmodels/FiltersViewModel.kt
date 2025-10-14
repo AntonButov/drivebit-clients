@@ -23,12 +23,12 @@ class FiltersViewModel {
                 filters =
                     listOf(
                         FilterItem(
-                            icon = "https://github.com/AntonButov/drivebit-clients/blob/trunk/images/logos/logo.png",
+                            icon = "images/filter-main/car.svg",
                             title = "Все",
                             backgroundIcon = "2",
                         ),
                         FilterItem(
-                            icon = "https://github.com/AntonButov/drivebit-clients/blob/trunk/images/logos/logo.png",
+                            icon = "images/filter-main/airplane.svg",
                             title = "Airports",
                             backgroundIcon = "3",
                         ),
