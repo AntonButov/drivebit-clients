@@ -156,13 +156,6 @@ ktlint {
     }
 }
 
-// Копирование статических ресурсов для веб-версии
-tasks.register<Copy>("copyWebResources") {
-    from("../../images")
-    into("build/processedResources/js/main")
-    dependsOn("jsProcessResources")
-}
+// Статические ресурсы теперь находятся в src/jsMain/resources/static/
+// и копируются автоматически системой сборки Compose Multiplatform
 
-tasks.named("jsBrowserDevelopmentRun") {
-    dependsOn("copyWebResources")
-}
