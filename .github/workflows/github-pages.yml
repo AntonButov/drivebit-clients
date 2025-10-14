@@ -1,7 +1,8 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (Simple)
 
 on:
   push:
+    branches: [ github-pages-setup, trunk, main, master ]
   workflow_dispatch:
 
 permissions:
@@ -15,7 +16,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build JS Application
+    name: Build and Deploy
     runs-on: ubuntu-latest
     
     steps:
@@ -27,21 +28,6 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v5
-      with:
-        node-version: '18'
-
-    - name: Cache Node modules
-      uses: actions/cache@v4
-      with:
-        path: |
-          node_modules/
-          **/node_modules/
-        key: node-modules-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
-        restore-keys: |
-          node-modules-
 
     - name: Cache Gradle packages
       uses: actions/cache@v4
@@ -55,110 +41,52 @@ jobs:
           pages-gradle-
           gradle-
 
-    - name: Cache build outputs
-      uses: actions/cache@v4
-      with:
-        path: |
-          build/
-          .gradle/
-          ~/.gradle/build-cache/
-        key: pages-build-${{ hashFiles('**/*.kt', '**/*.gradle*') }}
-        restore-keys: |
-          pages-build-
-          build-
-
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
     - name: Build JS distribution
       run: ./gradlew :composeApp:jsBrowserDistribution --no-daemon
 
-    - name: Prepare GitHub Pages content
+    - name: Prepare deployment
       run: |
-        set -e
-        echo "📦 Preparing GitHub Pages content..."
+        echo "📦 Preparing deployment..."
         
-        DIST_DIR="composeApp/build/dist/js/productionExecutable"
-        PAGES_DIR="pages_build"
+        # Create deployment directory
+        mkdir -p pages_build
         
-        echo "🔍 Checking if build directory exists..."
-        if [ ! -d "$DIST_DIR" ]; then
-          echo "❌ Build directory not found: $DIST_DIR"
-          echo "📁 Available directories:"
-          find composeApp/build -type d -name "*dist*" 2>/dev/null || echo "No dist directories found"
-          exit 1
-        fi
+        # Copy built files
+        cp -r composeApp/build/dist/js/productionExecutable/* pages_build/
         
-        echo "✅ Build directory found"
-        mkdir -p "$PAGES_DIR"
-        
-        echo "📂 Copying built files..."
-        cp -r "$DIST_DIR"/* "$PAGES_DIR"/
-        
-        echo "📄 Copying custom index.html..."
+        # Copy custom files
         if [ -f "index.html" ]; then
-          cp index.html "$PAGES_DIR"/index.html
-          echo "✅ Custom index.html copied"
-        else
-          echo "⚠️ index.html not found in root, using generated one"
+          cp index.html pages_build/
+          echo "✅ Copied custom index.html"
         fi
         
-        echo "🖼️ Copying images..."
         if [ -d "images" ]; then
-          cp -r images "$PAGES_DIR"/
-          echo "✅ Images copied"
-        else
-          echo "⚠️ Images directory not found"
+          cp -r images pages_build/
+          echo "✅ Copied images"
         fi
         
-        if [ -f "web-demo.html" ]; then
-          cp web-demo.html "$PAGES_DIR"/
-          echo "✅ web-demo.html copied"
-        fi
+        # Add .nojekyll
+        touch pages_build/.nojekyll
         
-        echo "🚫 Adding .nojekyll file..."
-        touch "$PAGES_DIR/.nojekyll"
-        
-        echo "📊 Adding cache-busting version..."
-        TIMESTAMP=$(date +%s)
-        sed -i "s/composeApp\.js?v=[0-9]*/composeApp.js?v=$TIMESTAMP/g" "$PAGES_DIR/index.html"
-        
-        echo "✅ Content prepared"
-        echo "📁 Files in pages_build:"
-        ls -la "$PAGES_DIR"
-        
-        echo "🔍 Verifying index.html exists..."
-        if [ -f "$PAGES_DIR/index.html" ]; then
-          echo "✅ index.html exists"
-          echo "📄 First few lines of index.html:"
-          head -5 "$PAGES_DIR/index.html"
-        else
-          echo "❌ index.html not found in pages_build!"
-          exit 1
-        fi
+        echo "📁 Deployment files:"
+        ls -la pages_build/
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
         path: 'pages_build'
 
-  deploy:
-    name: Deploy to GitHub Pages
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
 
-      - name: Notify deployment success
-        if: success()
-        run: |
-          echo "✅ Successfully deployed to GitHub Pages!"
-          echo "🌐 Your site is available at: ${{ steps.deployment.outputs.page_url }}"
-
+    - name: Success notification
+      run: |
+        echo "✅ Successfully deployed to GitHub Pages!"
+        echo "🌐 URL: ${{ steps.deployment.outputs.page_url }}"
