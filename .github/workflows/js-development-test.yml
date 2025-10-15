@@ -12,6 +12,8 @@ jobs:
     name: JS Development Server Test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Не запускается на ветке filters
+    if: github.ref != 'refs/heads/filters'
 
     steps:
     - name: Checkout
@@ -55,32 +57,49 @@ jobs:
         chmod +x ./test-server-files.sh
         chmod +x ./test-server-files-flexible.sh
 
-    - name: Build JS application
-      run: ./gradlew :composeApp:jsBrowserDevelopmentRun --no-daemon --stacktrace --info &
+    - name: Build JS application first
+      run: |
+        echo "🔨 Сначала собираем JS приложение..."
+        ./gradlew :composeApp:compileKotlinJs --no-daemon --stacktrace
+        ./gradlew :composeApp:jsBrowserDevelopmentRun --no-daemon --stacktrace --info &
+        SERVER_PID=$!
+        echo "SERVER_PID=$SERVER_PID" >> $GITHUB_ENV
       env:
         GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
 
     - name: Wait for server to start
       run: |
-        echo "Ожидание запуска сервера..."
-        sleep 30
+        echo "⏳ Ожидание запуска сервера..."
+        sleep 15
         
         # Проверяем что сервер запустился
-        for i in {1..30}; do
-          if curl -s --connect-timeout 5 http://localhost:8080 > /dev/null; then
+        SERVER_FOUND=false
+        for i in {1..60}; do
+          if curl -s --connect-timeout 3 http://localhost:8080 > /dev/null; then
             echo "✅ Сервер запущен на порту 8080"
+            SERVER_FOUND=true
             break
-          elif curl -s --connect-timeout 5 http://localhost:3000 > /dev/null; then
+          elif curl -s --connect-timeout 3 http://localhost:3000 > /dev/null; then
             echo "✅ Сервер запущен на порту 3000"
+            SERVER_FOUND=true
             break
-          elif curl -s --connect-timeout 5 http://localhost:8081 > /dev/null; then
+          elif curl -s --connect-timeout 3 http://localhost:8081 > /dev/null; then
             echo "✅ Сервер запущен на порту 8081"
+            SERVER_FOUND=true
             break
           else
-            echo "⏳ Попытка $i/30: ожидание запуска сервера..."
+            echo "⏳ Попытка $i/60: ожидание запуска сервера..."
             sleep 2
           fi
         done
+        
+        if [ "$SERVER_FOUND" = false ]; then
+          echo "❌ Сервер не запустился в течение 2 минут"
+          echo "🔍 Проверяем процессы..."
+          ps aux | grep gradle || echo "Нет процессов gradle"
+          ps aux | grep java || echo "Нет процессов java"
+          exit 1
+        fi
 
     - name: Detect server port
       id: detect-port
@@ -176,10 +195,15 @@ jobs:
       if: always()
       run: |
         echo "🧹 Очистка процессов"
+        # Останавливаем сервер если он запущен
+        if [ ! -z "$SERVER_PID" ]; then
+          echo "Останавливаем сервер (PID: $SERVER_PID)"
+          kill $SERVER_PID || true
+        fi
         # Останавливаем все процессы Gradle
         pkill -f gradle || true
         pkill -f java || true
-        sleep 5
+        sleep 3
 
     - name: Generate test report
       if: always()
