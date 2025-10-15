@@ -161,4 +161,3 @@ ktlint {
 
 // Статические ресурсы теперь находятся в src/jsMain/resources/static/
 // и копируются автоматически системой сборки Compose Multiplatform
-

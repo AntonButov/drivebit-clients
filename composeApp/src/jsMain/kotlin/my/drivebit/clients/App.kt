@@ -3,8 +3,7 @@ package my.drivebit.clients
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
-import my.drivebit.components.FilterButton
+import my.drivebit.components.filterButton
 import my.drivebit.shared.storage.Storage
 import my.drivebit.shared.storage.create
 import my.drivebit.viewmodels.FiltersViewModel
@@ -13,7 +12,6 @@ import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Text
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
-import org.koin.core.KoinApplication
 import org.koin.dsl.module
 
 val appModule =
@@ -23,18 +21,17 @@ val appModule =
         single { FiltersViewModel() }
     }
 
-
 @Composable
 actual fun App() {
     KoinApplication(application = {
         modules(appModule)
     }) {
-        AppContent()
+        appContent()
     }
 }
 
 @Composable
-fun AppContent() {
+fun appContent() {
     val filterViewModel: FiltersViewModel = koinInject()
     val state = filterViewModel.state.collectAsState()
     val filters = state.value.filters
@@ -57,7 +54,7 @@ fun AppContent() {
             }
         }) {
             filters.forEach { filter ->
-                FilterButton(
+                filterButton(
                     filter = filter,
                     isSelected = filter.title == selected,
                     onClick = { filterViewModel.onSelect(filter.title) },

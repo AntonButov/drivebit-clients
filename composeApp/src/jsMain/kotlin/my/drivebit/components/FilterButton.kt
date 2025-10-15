@@ -1,15 +1,21 @@
 package my.drivebit.components
 
+import androidx.compose.runtime.Composable
 import my.drivebit.viewmodels.FilterItem
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.AlignItems
+import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.DisplayStyle
+import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.display
+import org.jetbrains.compose.web.css.gap
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Img
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
-import androidx.compose.runtime.Composable
 
 @Composable
-fun FilterButton(
+fun filterButton(
     filter: FilterItem,
     isSelected: Boolean,
     onClick: () -> Unit,
