@@ -7,11 +7,18 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val BlueRed = Color(0xFFE53E3E)
+val Blue = Color(0xFF2962FF)
+
+val BlueRed = Color(0xFF6B46C1)
+val Red = Color(0xFFEC4899)
+
+val White = Color(0xFFFFFFFF)
+val Black = Color(0xFF000000)
+val Gray300 = Color(0xFFE0E0E6)
 
 private val DarkColorScheme =
     darkColorScheme(
-        primary = BlueRed,
+        primary =White,
         secondary = BlueRed,
         tertiary = BlueRed,
     )
