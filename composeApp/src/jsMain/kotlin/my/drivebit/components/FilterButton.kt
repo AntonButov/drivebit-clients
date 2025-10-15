@@ -39,6 +39,7 @@ fun FilterButton(
                     height(20.px)
                     property("object-fit", "contain")
                     property("transition", "opacity 0.3s ease")
+                    color(if (isSelected) Color.white else Color.black)
                 }
             },
         )
