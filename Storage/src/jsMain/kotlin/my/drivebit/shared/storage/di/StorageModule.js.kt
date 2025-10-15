@@ -9,8 +9,10 @@ import org.koin.dsl.module
 
 actual val storageModule: Module =
     module {
+        // ✅ Предоставляем Settings как отдельный сервис
+        single<Settings> { StorageSettings() }
+        
         single<Storage> {
-            val settings: Settings = StorageSettings()
-            StorageImpl(settings)
+            StorageImpl(get<Settings>())
         }
     }

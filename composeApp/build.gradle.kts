@@ -80,6 +80,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(project(":Storage"))
             implementation(project(":CommonViewModels"))
+            implementation(project(":UI-Components"))
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             // ViewModel поддержка для веб-таргета
@@ -89,6 +90,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":Storage"))
             implementation(compose.runtime)
+            implementation(compose.ui)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.datetime)
         }
