@@ -7,7 +7,22 @@ import my.drivebit.components.filterButton
 import my.drivebit.shared.storage.Storage
 import my.drivebit.shared.storage.create
 import my.drivebit.viewmodels.FiltersViewModel
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.AlignItems
+import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.DisplayStyle
+import org.jetbrains.compose.web.css.FlexWrap
+import org.jetbrains.compose.web.css.alignItems
+import org.jetbrains.compose.web.css.backgroundColor
+import org.jetbrains.compose.web.css.borderRadius
+import org.jetbrains.compose.web.css.color
+import org.jetbrains.compose.web.css.display
+import org.jetbrains.compose.web.css.flexWrap
+import org.jetbrains.compose.web.css.fontFamily
+import org.jetbrains.compose.web.css.fontSize
+import org.jetbrains.compose.web.css.gap
+import org.jetbrains.compose.web.css.marginBottom
+import org.jetbrains.compose.web.css.padding
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Text
 import org.koin.compose.KoinApplication
@@ -22,6 +37,7 @@ val appModule =
     }
 
 @Composable
+@Suppress("FunctionName")
 actual fun App() {
     KoinApplication(application = {
         modules(appModule)
