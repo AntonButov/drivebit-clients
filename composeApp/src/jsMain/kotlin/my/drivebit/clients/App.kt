@@ -4,12 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.russhwolf.settings.Settings
 import my.drivebit.components.FilterButton
-import my.drivebit.design.WebDrivebitColors
 import my.drivebit.shared.storage.Storage
 import my.drivebit.shared.storage.create
-import my.drivebit.shared.storage.di.storageModule
 import my.drivebit.viewmodels.FiltersViewModel
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.Div
@@ -22,15 +19,15 @@ import org.koin.dsl.module
 val appModule =
     module {
         single<Storage> { create() }
-        // ✅ ViewModel получает Settings для сохранения состояния
-        single { FiltersViewModel(get<Settings>()) }
+        // Регистрируем ViewModel как factory для создания новых экземпляров
+        single { FiltersViewModel() }
     }
 
 
 @Composable
 actual fun App() {
     KoinApplication(application = {
-        modules(appModule, storageModule)
+        modules(appModule)
     }) {
         AppContent()
     }
@@ -47,7 +44,6 @@ fun AppContent() {
         style {
             padding(20.px)
             fontFamily("system-ui, -apple-system, sans-serif")
-            backgroundColor(WebDrivebitColors.Gray100)
         }
     }) {
         // Фильтры
@@ -73,11 +69,10 @@ fun AppContent() {
         Div({
             style {
                 padding(16.px)
-                backgroundColor(WebDrivebitColors.White)
+                backgroundColor(Color("#f8f9fa"))
                 borderRadius(8.px)
                 fontSize(14.px)
-                color(WebDrivebitColors.Gray500)
-                border(1.px, LineStyle.Solid, WebDrivebitColors.Gray300)
+                color(Color("#666"))
             }
         }) {
             Text("Выбранный фильтр: $selected")

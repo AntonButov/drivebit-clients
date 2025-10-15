@@ -27,7 +27,6 @@ kotlin {
         commonMain.dependencies {
             implementation(kotlin("stdlib"))
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.multiplatform.settings)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
