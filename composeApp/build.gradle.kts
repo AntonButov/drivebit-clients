@@ -81,6 +81,9 @@ kotlin {
             implementation(project(":Storage"))
             implementation(project(":CommonViewModels"))
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            // ViewModel поддержка для веб-таргета
+            implementation("io.insert-koin:koin-compose-viewmodel-js:4.1.1")
         }
 
         commonMain.dependencies {
