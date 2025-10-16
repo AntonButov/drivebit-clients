@@ -55,7 +55,7 @@ actual fun App() {
 
 @Composable
 fun appContent() {
-    // DrivebitTheme {
+     DrivebitTheme {
     val filterViewModel: FiltersViewModel = koinInject()
     val state = filterViewModel.state.collectAsState()
     val filters = state.value.filters
@@ -88,7 +88,7 @@ fun appContent() {
                 classes("turo-logo")
             }
         )
-        
+
         // Фоновая картинка для выбранного фильтра
         val selectedFilter = filters.find { it.title == selected }
         selectedFilter?.let { filter ->
@@ -96,7 +96,7 @@ fun appContent() {
                 backgroundIconUrl = "https://antonbutov.github.io/drivebit-clients/images/searchbackground/car${filter.backgroundIcon}.jpg"
             )
         }
-        
+
         // Фильтры
         Div({
             style {
@@ -117,5 +117,5 @@ fun appContent() {
             }
         }
           }
-  //  }
+    }
 }
