@@ -47,7 +47,6 @@ fun filterButton(
         }
         onClick { onClick() }
     }) {
-        // Асинхронная загрузка иконки по URL
         Img(
             src = filter.icon,
             alt = filter.icon,
@@ -57,12 +56,13 @@ fun filterButton(
                     height(20.px)
                     property("object-fit", "contain")
                     property("transition", "opacity 0.3s ease")
-                    color(if (isSelected) Color.white else Color.black)
+                    if (isSelected) {
+                        property("filter", "brightness(0) invert(1)")
+                    }
                 }
             },
         )
 
-        // Название
         Span({
             style {
                 fontSize(14.px)
