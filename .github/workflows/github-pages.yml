@@ -58,12 +58,6 @@ jobs:
         # Copy built files
         cp -r composeApp/build/dist/js/productionExecutable/* dist/
 
-        # Copy custom files
-        if [ -f "index.html" ]; then
-          cp index.html dist/
-          echo "✅ Copied custom index.html"
-        fi
-
         if [ -d "images" ]; then
           cp -r images dist/
           echo "✅ Copied images"
