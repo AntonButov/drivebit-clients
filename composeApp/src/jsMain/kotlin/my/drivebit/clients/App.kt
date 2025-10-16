@@ -81,6 +81,9 @@ fun appContent() {
                     height(40.px)
                     marginBottom(20.px)
                     property("object-fit", "contain")
+                    property("transition", "all 0.3s ease")
+                    property("max-width", "120px")
+                    property("max-height", "40px")
                 }
                 classes("turo-logo")
             }
