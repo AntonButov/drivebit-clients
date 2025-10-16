@@ -13,6 +13,7 @@ import org.jetbrains.compose.web.css.AlignItems
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.FlexWrap
+import org.jetbrains.compose.web.css.JustifyContent
 import org.jetbrains.compose.web.css.alignItems
 import org.jetbrains.compose.web.css.backgroundColor
 import org.jetbrains.compose.web.css.borderRadius
@@ -22,6 +23,7 @@ import org.jetbrains.compose.web.css.flexWrap
 import org.jetbrains.compose.web.css.fontFamily
 import org.jetbrains.compose.web.css.fontSize
 import org.jetbrains.compose.web.css.gap
+import org.jetbrains.compose.web.css.justifyContent
 import org.jetbrains.compose.web.css.marginBottom
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
@@ -76,6 +78,7 @@ fun appContent() {
                 display(DisplayStyle.Flex)
                 gap(12.px)
                 alignItems(AlignItems.Center)
+                justifyContent(JustifyContent.Center)
                 marginBottom(20.px)
                 flexWrap(FlexWrap.Wrap)
             }
@@ -87,19 +90,6 @@ fun appContent() {
                     onClick = { filterViewModel.onSelect(filter.title) },
                 )
             }
-        }
-
-        // Информация о выбранном фильтре
-        Div({
-            style {
-                padding(16.px)
-                backgroundColor(Color("#f8f9fa"))
-                borderRadius(8.px)
-                fontSize(14.px)
-                color(Color("#666"))
-            }
-        }) {
-            Text("Выбранный фильтр: $selected")
         }
           }
   //  }
