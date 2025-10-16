@@ -49,7 +49,7 @@ actual fun App() {
 
 @Composable
 fun appContent() {
-     DrivebitTheme {
+    // DrivebitTheme {
     val filterViewModel: FiltersViewModel = koinInject()
     val state = filterViewModel.state.collectAsState()
     val filters = state.value.filters
@@ -93,5 +93,5 @@ fun appContent() {
             Text("Выбранный фильтр: $selected")
         }
           }
-    }
+  //  }
 }
