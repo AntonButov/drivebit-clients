@@ -73,7 +73,7 @@ fun appContent() {
     }) {
         // Логотип Turo сверху
         Img(
-            src = "https://antonbutov.github.io/drivebit-clients/images/logos/turo-logo.svg",
+            src = "https://antonbutov.github.io/drivebit-clients/images/logos/turo_logo.svg",
             alt = "Turo Logo",
             attrs = {
                 style {
