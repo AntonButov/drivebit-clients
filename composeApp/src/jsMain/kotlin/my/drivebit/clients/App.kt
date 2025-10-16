@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import my.drivebit.components.filterButton
+import my.drivebit.components.FilterBackgroundImage
 import my.drivebit.shared.storage.Storage
 import my.drivebit.shared.storage.create
 import my.drivebit.ui.theme.DrivebitTheme
@@ -61,6 +62,14 @@ fun appContent() {
             fontFamily("system-ui, -apple-system, sans-serif")
         }
     }) {
+        // Фоновая картинка для выбранного фильтра
+        val selectedFilter = filters.find { it.title == selected }
+        selectedFilter?.let { filter ->
+            FilterBackgroundImage(
+                backgroundIconUrl = "https://antonbutov.github.io/drivebit-clients/images/searchbackground/car${filter.backgroundIcon}.jpg"
+            )
+        }
+        
         // Фильтры
         Div({
             style {
