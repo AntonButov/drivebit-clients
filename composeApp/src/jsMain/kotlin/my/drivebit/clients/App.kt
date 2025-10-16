@@ -23,11 +23,14 @@ import org.jetbrains.compose.web.css.flexWrap
 import org.jetbrains.compose.web.css.fontFamily
 import org.jetbrains.compose.web.css.fontSize
 import org.jetbrains.compose.web.css.gap
+import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.justifyContent
 import org.jetbrains.compose.web.css.marginBottom
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.Img
 import org.jetbrains.compose.web.dom.Text
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
@@ -68,6 +71,21 @@ fun appContent() {
             property("box-sizing", "border-box")
         }
     }) {
+        // Логотип Turo сверху
+        Img(
+            src = "https://antonbutov.github.io/drivebit-clients/images/logos/turo-logo.svg",
+            alt = "Turo Logo",
+            attrs = {
+                style {
+                    width(120.px)
+                    height(40.px)
+                    marginBottom(20.px)
+                    property("object-fit", "contain")
+                }
+                classes("turo-logo")
+            }
+        )
+        
         // Фоновая картинка для выбранного фильтра
         val selectedFilter = filters.find { it.title == selected }
         selectedFilter?.let { filter ->
