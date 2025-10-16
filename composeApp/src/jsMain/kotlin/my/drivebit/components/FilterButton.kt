@@ -42,11 +42,12 @@ fun filterButton(
             padding(12.px, 16.px)
             borderRadius(8.px)
             cursor("pointer")
-            border(1.px, LineStyle.Solid, if (isSelected) CSSColors.Black else CSSColors.Gray300)
             backgroundColor(if (isSelected) CSSColors.Black else CSSColors.White)
             color(if (isSelected) CSSColors.White else CSSColors.Black)
             property("transition", "all 0.2s ease")
+            property("border", "none")
         }
+        classes("filter-button")
         onClick { onClick() }
     }) {
         Img(
