@@ -2,6 +2,8 @@ package my.drivebit.components
 
 import androidx.compose.runtime.Composable
 import my.drivebit.design.CSSColors
+import my.drivebit.design.CSSTypography
+import my.drivebit.design.applyTypography
 import my.drivebit.viewmodels.FilterItem
 import org.jetbrains.compose.web.css.AlignItems
 import org.jetbrains.compose.web.css.DisplayStyle
@@ -65,8 +67,7 @@ fun filterButton(
 
         Span({
             style {
-                fontSize(14.px)
-                fontWeight("500")
+                applyTypography(CSSTypography.Styles.button)
                 marginLeft(8.px)
             }
         }) {
