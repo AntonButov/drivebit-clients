@@ -60,8 +60,12 @@ fun appContent() {
 
     Div({
         style {
-            padding(20.px)
+            padding(20.px, 40.px)
             fontFamily("system-ui, -apple-system, sans-serif")
+            property("min-width", "320px")
+            property("max-width", "1200px")
+            property("margin", "0 auto")
+            property("box-sizing", "border-box")
         }
     }) {
         // Фоновая картинка для выбранного фильтра

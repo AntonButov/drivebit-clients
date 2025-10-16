@@ -17,6 +17,32 @@
             width: 100%;
             height: 100vh;
         }
+        
+        /* Адаптивные отступы */
+        @media (max-width: 768px) {
+            #root {
+                padding: 0 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #root {
+                padding: 0 5px;
+            }
+        }
+        
+        /* Адаптивная высота картинки */
+        @media (max-width: 768px) {
+            .filter-background {
+                height: 150px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .filter-background {
+                height: 120px !important;
+            }
+        }
     </style>
 </head>
 <body>

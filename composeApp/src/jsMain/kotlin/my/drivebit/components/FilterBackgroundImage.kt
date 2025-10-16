@@ -17,7 +17,11 @@ fun FilterBackgroundImage(
             overflow("hidden")
             position(Position.Relative)
             marginBottom(20.px)
+            property("flex", "1")
+            property("min-height", "150px")
+            property("max-height", "300px")
         }
+        classes("filter-background")
     }) {
         Img(
             src = backgroundIconUrl,
