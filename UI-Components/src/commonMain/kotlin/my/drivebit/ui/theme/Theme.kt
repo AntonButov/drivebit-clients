@@ -1,26 +1,44 @@
 package my.drivebit.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val BlueRed = Color(0xFFE53E3E)
+object ColorsDriveBit {
+    val Blue = Color(0xFF2962FF)
 
-private val DarkColorScheme =
-    darkColorScheme(
-        primary = BlueRed,
-        secondary = BlueRed,
-        tertiary = BlueRed,
+    val BlueRed = Color(0xFF6B46C1)
+    val Red = Color(0xFFEC4899)
+
+    val White = Color(0xFFFFFFFF)
+    val Black = Color(0xFF000000)
+    val Gray300 = Color(0xFFE0E0E6)
+}
+private val DarkColorScheme: ColorScheme =
+    lightColorScheme(
+        primary = ColorsDriveBit.Black,
+        onPrimary =  ColorsDriveBit.White,
+        background =  ColorsDriveBit.White,
+        surface =  ColorsDriveBit.White,
+        onSurface =  ColorsDriveBit.Black,
+        surfaceVariant =  ColorsDriveBit.Gray300,
+        surfaceContainer =  ColorsDriveBit.White,
+        outline =  ColorsDriveBit.Blue,
     )
 
-private val LightColorScheme =
-    lightColorScheme(
-        primary = BlueRed,
-        secondary = BlueRed,
-        tertiary = BlueRed,
+private val LightColorScheme: ColorScheme =
+    darkColorScheme(
+        primary =  ColorsDriveBit.White,
+        onPrimary =  ColorsDriveBit.Black,
+        background =  ColorsDriveBit.Black,
+        surface = ColorsDriveBit.Black,
+        surfaceVariant = ColorsDriveBit.Gray300,
+        surfaceContainer = ColorsDriveBit.Black,
+        outline = ColorsDriveBit.Blue,
     )
 
 @Composable

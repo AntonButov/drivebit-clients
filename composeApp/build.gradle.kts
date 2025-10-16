@@ -80,7 +80,11 @@ kotlin {
             implementation(compose.runtime)
             implementation(project(":Storage"))
             implementation(project(":CommonViewModels"))
+            implementation(project(":UI-Components"))
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            // ViewModel поддержка для веб-таргета
+            implementation("io.insert-koin:koin-compose-viewmodel-js:4.1.1")
         }
 
         commonMain.dependencies {
@@ -156,6 +160,12 @@ ktlint {
     }
 }
 
-// Статические ресурсы теперь находятся в src/jsMain/resources/static/
-// и копируются автоматически системой сборки Compose Multiplatform
+// Копирование статических ресурсов (изображений)
+tasks.register<Copy>("copyStaticResources") {
+    from("${rootProject.projectDir}/images")
+    into("$buildDir/dist/js/productionExecutable/images")
+}
 
+tasks.named("jsBrowserDistribution") {
+    dependsOn("copyStaticResources")
+}

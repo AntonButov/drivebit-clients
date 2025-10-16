@@ -1,0 +1,83 @@
+name: WASM Test
+
+on:
+  pull_request:
+    branches: [ trunk ]
+  push:
+    branches: [ trunk ]
+
+jobs:
+  wasm-test:
+    name: WASM Distribution Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Setup JDK 17
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+          ~/.gradle/daemon
+        key: wasm-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          wasm-gradle-
+          gradle-
+
+    - name: Cache build outputs
+      uses: actions/cache@v4
+      with:
+        path: |
+          build/
+          .gradle/
+          ~/.gradle/build-cache/
+        key: wasm-build-${{ hashFiles('**/*.kt', '**/*.gradle*') }}
+        restore-keys: |
+          wasm-build-
+          build-
+
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+
+    - name: Build JS Browser Distribution
+      run: ./gradlew jsBrowserDistribution --no-daemon --stacktrace
+
+    - name: Check composeApp.js for skiko references
+      run: |
+        # Находим файл composeApp.js в правильной директории
+        COMPOSE_APP_JS="composeApp/build/dist/js/productionExecutable/composeApp.js"
+        
+        if [ ! -f "$COMPOSE_APP_JS" ]; then
+          echo "❌ composeApp.js not found at expected location: $COMPOSE_APP_JS"
+          echo "📁 Available files in dist/js/productionExecutable/:"
+          ls -la composeApp/build/dist/js/productionExecutable/ 2>/dev/null || echo "Directory does not exist"
+          exit 1
+        fi
+        
+        echo "✅ Found composeApp.js at: $COMPOSE_APP_JS"
+        
+        # Ищем строку "skiko" в файле
+        if grep -i "skiko" "$COMPOSE_APP_JS"; then
+          echo "❌ Found 'skiko' references in composeApp.js - test failed!"
+          exit 1
+        else
+          echo "✅ No 'skiko' references found in composeApp.js - test passed!"
+        fi
+
+    - name: Verify file structure
+      run: |
+        echo "📁 Build output structure:"
+        find composeApp/build/dist/js/productionExecutable -type f -name "*.js" | head -10
+        echo ""
+        echo "📄 composeApp.js size:"
+        ls -lh composeApp/build/dist/js/productionExecutable/composeApp.js 2>/dev/null || echo "File not found"

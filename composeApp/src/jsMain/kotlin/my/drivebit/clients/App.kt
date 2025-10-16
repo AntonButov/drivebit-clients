@@ -3,123 +3,119 @@ package my.drivebit.clients
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import my.drivebit.components.filterButton
+import my.drivebit.components.FilterBackgroundImage
 import my.drivebit.shared.storage.Storage
 import my.drivebit.shared.storage.create
-import my.drivebit.viewmodels.FilterItem
+import my.drivebit.ui.theme.DrivebitTheme
 import my.drivebit.viewmodels.FiltersViewModel
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.AlignItems
+import org.jetbrains.compose.web.css.Color
+import org.jetbrains.compose.web.css.DisplayStyle
+import org.jetbrains.compose.web.css.FlexWrap
+import org.jetbrains.compose.web.css.JustifyContent
+import org.jetbrains.compose.web.css.alignItems
+import org.jetbrains.compose.web.css.backgroundColor
+import org.jetbrains.compose.web.css.borderRadius
+import org.jetbrains.compose.web.css.color
+import org.jetbrains.compose.web.css.display
+import org.jetbrains.compose.web.css.flexWrap
+import org.jetbrains.compose.web.css.fontFamily
+import org.jetbrains.compose.web.css.fontSize
+import org.jetbrains.compose.web.css.gap
+import org.jetbrains.compose.web.css.height
+import org.jetbrains.compose.web.css.justifyContent
+import org.jetbrains.compose.web.css.marginBottom
+import org.jetbrains.compose.web.css.padding
+import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Img
-import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
-import org.koin.core.context.startKoin
+import org.koin.compose.KoinApplication
+import org.koin.compose.koinInject
 import org.koin.dsl.module
 
 val appModule =
     module {
         single<Storage> { create() }
+        // Регистрируем ViewModel как factory для создания новых экземпляров
+        single { FiltersViewModel() }
     }
 
 @Composable
-fun FilterButton(
-    filter: FilterItem,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-) {
-    Div({
-        style {
-            display(DisplayStyle.Flex)
-            alignItems(AlignItems.Center)
-            gap(8.px)
-            padding(12.px, 16.px)
-            borderRadius(8.px)
-            cursor("pointer")
-            border(1.px, LineStyle.Solid, if (isSelected) Color.black else Color.gray)
-            backgroundColor(if (isSelected) Color.black else Color.white)
-            color(if (isSelected) Color.white else Color.black)
-            property("transition", "all 0.2s ease")
-        }
-        onClick { onClick() }
+@Suppress("FunctionName")
+actual fun App() {
+    KoinApplication(application = {
+        modules(appModule)
     }) {
-        // Асинхронная загрузка иконки по URL
-        Img(
-            src = filter.icon,
-            alt = filter.icon,
-            attrs = {
-                style {
-                    width(20.px)
-                    height(20.px)
-                    property("object-fit", "contain")
-                    property("transition", "opacity 0.3s ease")
-                }
-            },
-        )
-
-        // Название
-        Span({
-            style {
-                fontSize(14.px)
-                fontWeight("500")
-                marginLeft(8.px)
-            }
-        }) {
-            Text(filter.title)
-        }
+        appContent()
     }
 }
 
 @Composable
-actual fun App() {
-    val koin =
-        remember {
-            startKoin {
-                modules(appModule)
-            }
-        }
-
-    val storage = remember { koin.koin.get<Storage>() }
-    val filterViewModel: FiltersViewModel = remember { FiltersViewModel() }
+fun appContent() {
+    // DrivebitTheme {
+    val filterViewModel: FiltersViewModel = koinInject()
     val state = filterViewModel.state.collectAsState()
     val filters = state.value.filters
     val selected = state.value.selected
 
     Div({
         style {
-            padding(20.px)
+            padding(20.px, 40.px)
             fontFamily("system-ui, -apple-system, sans-serif")
+            property("min-width", "320px")
+            property("max-width", "1200px")
+            property("margin", "0 auto")
+            property("box-sizing", "border-box")
         }
     }) {
+        // Логотип Turo сверху
+        Img(
+            src = "https://antonbutov.github.io/drivebit-clients/images/logos/turo-logo.svg",
+            alt = "Turo Logo",
+            attrs = {
+                style {
+                    width(120.px)
+                    height(40.px)
+                    marginBottom(20.px)
+                    property("object-fit", "contain")
+                    property("transition", "all 0.3s ease")
+                    property("max-width", "120px")
+                    property("max-height", "40px")
+                }
+                classes("turo-logo")
+            }
+        )
+
+        // Фоновая картинка для выбранного фильтра
+        val selectedFilter = filters.find { it.title == selected }
+        selectedFilter?.let { filter ->
+            FilterBackgroundImage(
+                backgroundIconUrl = "https://antonbutov.github.io/drivebit-clients/images/searchbackground/car${filter.backgroundIcon}.jpg"
+            )
+        }
+
         // Фильтры
         Div({
             style {
                 display(DisplayStyle.Flex)
                 gap(12.px)
                 alignItems(AlignItems.Center)
+                justifyContent(JustifyContent.Center)
                 marginBottom(20.px)
                 flexWrap(FlexWrap.Wrap)
             }
         }) {
             filters.forEach { filter ->
-                FilterButton(
+                filterButton(
                     filter = filter,
                     isSelected = filter.title == selected,
                     onClick = { filterViewModel.onSelect(filter.title) },
                 )
             }
         }
-
-        // Информация о выбранном фильтре
-        Div({
-            style {
-                padding(16.px)
-                backgroundColor(Color("#f8f9fa"))
-                borderRadius(8.px)
-                fontSize(14.px)
-                color(Color("#666"))
-            }
-        }) {
-            Text("Выбранный фильтр: $selected")
-        }
-    }
+          }
+   // }
 }
