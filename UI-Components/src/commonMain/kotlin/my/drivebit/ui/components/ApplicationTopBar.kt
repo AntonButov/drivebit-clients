@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
-import my.drivebit.ui.theme.BlueRed
+import my.drivebit.ui.theme.ColorsDriveBit
 
 @Composable
 private fun ArrowBackIcon(): ImageVector =
@@ -29,7 +29,7 @@ private fun ArrowBackIcon(): ImageVector =
             viewportHeight = 24f,
         ).apply {
             path(
-                fill = SolidColor(BlueRed),
+                fill = SolidColor(ColorsDriveBit.BlueRed),
                 fillAlpha = 1.0f,
                 stroke = null,
                 strokeAlpha = 1.0f,

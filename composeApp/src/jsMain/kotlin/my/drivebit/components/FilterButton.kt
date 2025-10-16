@@ -1,9 +1,9 @@
 package my.drivebit.components
 
 import androidx.compose.runtime.Composable
+import my.drivebit.design.CSSColors
 import my.drivebit.viewmodels.FilterItem
 import org.jetbrains.compose.web.css.AlignItems
-import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.alignItems
@@ -40,9 +40,9 @@ fun filterButton(
             padding(12.px, 16.px)
             borderRadius(8.px)
             cursor("pointer")
-            border(1.px, LineStyle.Solid, if (isSelected) Color.black else Color.gray)
-            backgroundColor(if (isSelected) Color.black else Color.white)
-            color(if (isSelected) Color.white else Color.black)
+            border(1.px, LineStyle.Solid, if (isSelected) CSSColors.Black else CSSColors.Gray300)
+            backgroundColor(if (isSelected) CSSColors.Black else CSSColors.White)
+            color(if (isSelected) CSSColors.White else CSSColors.Black)
             property("transition", "all 0.2s ease")
         }
         onClick { onClick() }
