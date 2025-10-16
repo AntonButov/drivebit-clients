@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import my.drivebit.components.filterButton
 import my.drivebit.shared.storage.Storage
 import my.drivebit.shared.storage.create
+import my.drivebit.ui.theme.DrivebitTheme
 import my.drivebit.viewmodels.FiltersViewModel
 import org.jetbrains.compose.web.css.AlignItems
 import org.jetbrains.compose.web.css.Color
@@ -48,6 +49,7 @@ actual fun App() {
 
 @Composable
 fun appContent() {
+     DrivebitTheme {
     val filterViewModel: FiltersViewModel = koinInject()
     val state = filterViewModel.state.collectAsState()
     val filters = state.value.filters
@@ -90,5 +92,6 @@ fun appContent() {
         }) {
             Text("Выбранный фильтр: $selected")
         }
+          }
     }
 }
