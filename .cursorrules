@@ -33,3 +33,10 @@ This is a Kotlin Multiplatform project for Drivebit mobile clients targeting And
 - For quick local verification (optional): `./gradlew :ModuleName:check`
 - NEVER run `./gradlew clean` without explicit user permission
 - Cache cleaning should only be done when user specifically requests it
+
+## Git Workflow Rules
+- **NEVER push directly to `trunk` branch**
+- **ALWAYS create feature branches** for new changes
+- **ALWAYS use Pull Requests** to merge changes into `trunk`
+- **Workflow**: create branch → make changes → push branch → create PR → merge to trunk
+- **Exception**: Only emergency hotfixes can be pushed directly to trunk (with immediate PR follow-up)
