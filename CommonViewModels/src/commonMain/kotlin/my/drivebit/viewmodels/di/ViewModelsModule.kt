@@ -5,7 +5,7 @@ import my.drivebit.viewmodels.IconUserViewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val viewModelsModule: Module =
+val commonViewModelsModule: Module =
     module {
 
         factory {

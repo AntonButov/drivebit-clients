@@ -2,12 +2,12 @@ package my.drivebit.clients
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import my.drivebit.components.FilterBackgroundImage
+import my.drivebit.components.MenuUserButton
 import my.drivebit.components.filterButton
-import my.drivebit.shared.storage.Storage
-import my.drivebit.shared.storage.create
+import my.drivebit.shared.storage.di.storageModule
 import my.drivebit.viewmodels.FiltersViewModel
+import my.drivebit.viewmodels.di.commonViewModelsModule
 import org.jetbrains.compose.web.css.AlignItems
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.FlexWrap
@@ -27,19 +27,15 @@ import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Img
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
-import org.koin.dsl.module
-
-val jsAppModule =
-    module {
-        single<Storage> { create() }
-        single { FiltersViewModel(get()) }
-    }
 
 @Composable
 @Suppress("FunctionName")
 actual fun App() {
     KoinApplication(application = {
-        modules(jsAppModule)
+        modules(
+            storageModule,
+            commonViewModelsModule,
+        )
     }) {
         appContent()
     }
@@ -62,26 +58,38 @@ fun appContent() {
             property("margin", "0 auto")
             property("box-sizing", "border-box")
         }
+        classes("app-container")
     }) {
-        // Логотип Turo сверху
-        Img(
-            src = "https://antonbutov.github.io/drivebit-clients/images/logos/turo_logo.svg",
-            alt = "Turo Logo",
-            attrs = {
-                style {
-                    width(120.px)
-                    height(40.px)
-                    marginBottom(20.px)
-                    property("object-fit", "contain")
-                    property("transition", "all 0.3s ease")
-                    property("max-width", "120px")
-                    property("max-height", "40px")
-                }
-                classes("turo-logo")
-            },
-        )
+        // Header with logo and menu button
+        Div({
+            style {
+                display(DisplayStyle.Flex)
+                justifyContent(JustifyContent.SpaceBetween)
+                alignItems(AlignItems.Center)
+                marginBottom(20.px)
+            }
+        }) {
+            Img(
+                src = "https://antonbutov.github.io/drivebit-clients/images/logos/turo_logo.svg",
+                alt = "Drive bit Logo",
+                attrs = {
+                    style {
+                        width(120.px)
+                        height(40.px)
+                        property("object-fit", "contain")
+                        property("transition", "all 0.3s ease")
+                        property("max-width", "120px")
+                        property("max-height", "40px")
+                    }
+                    classes("turo-logo")
+                },
+            )
 
-        // Фоновая картинка для выбранного фильтра
+            MenuUserButton {
+                // TODO: Implement this
+            }
+        }
+
         val selectedFilter = filters.find { it.title == selected }
         selectedFilter?.let { filter ->
             FilterBackgroundImage(
@@ -89,7 +97,6 @@ fun appContent() {
             )
         }
 
-        // Фильтры
         Div({
             style {
                 display(DisplayStyle.Flex)

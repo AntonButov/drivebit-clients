@@ -11,7 +11,7 @@ import my.drivebit.mobile.di.mobileModule
 import my.drivebit.mobile.screens.main.MainScreen
 import my.drivebit.shared.storage.di.storageModule
 import my.drivebit.ui.theme.DrivebitTheme
-import my.drivebit.viewmodels.di.viewModelsModule
+import my.drivebit.viewmodels.di.commonViewModelsModule
 import org.koin.compose.KoinApplication
 import org.koin.dsl.module
 
@@ -26,7 +26,7 @@ actual fun App() {
                     single<Context> { context }
                 },
                 storageModule,
-                viewModelsModule,
+                commonViewModelsModule,
                 mobileModule,
             )
         }) {

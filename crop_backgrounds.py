@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Скрипт для обрезания изображений автомобилей
+Скрипт для обрезания фоновых изображений поиска
 Убирает 30% сверху и снизу от каждого изображения
 """
 
@@ -8,28 +8,28 @@ import os
 from PIL import Image
 import glob
 
-def crop_car_images():
-    """Обрезает изображения автомобилей, убирая 30% сверху и снизу"""
+def crop_background_images():
+    """Обрезает фоновые изображения поиска, убирая 30% сверху и снизу"""
     
-    # Путь к папке с изображениями автомобилей
-    cars_dir = "images/cars"
+    # Путь к папке с фоновыми изображениями
+    backgrounds_dir = "images/searchbackground"
     
-    if not os.path.exists(cars_dir):
-        print(f"Папка {cars_dir} не найдена!")
+    if not os.path.exists(backgrounds_dir):
+        print(f"Папка {backgrounds_dir} не найдена!")
         return
     
-    # Находим все изображения в папке cars
+    # Находим все изображения в папке searchbackground
     image_extensions = ['*.jpg', '*.jpeg', '*.png', '*.webp']
     image_files = []
     
     for ext in image_extensions:
-        image_files.extend(glob.glob(os.path.join(cars_dir, ext)))
+        image_files.extend(glob.glob(os.path.join(backgrounds_dir, ext)))
     
     if not image_files:
-        print(f"Изображения в папке {cars_dir} не найдены!")
+        print(f"Изображения в папке {backgrounds_dir} не найдены!")
         return
     
-    print(f"Найдено {len(image_files)} изображений для обработки:")
+    print(f"Найдено {len(image_files)} фоновых изображений для обработки:")
     
     for image_path in image_files:
         try:
@@ -63,7 +63,7 @@ def crop_car_images():
         except Exception as e:
             print(f"Ошибка при обработке {image_path}: {e}")
     
-    print("\nОбработка завершена!")
+    print("\nОбработка фоновых изображений завершена!")
 
 if __name__ == "__main__":
-    crop_car_images()
+    crop_background_images()
