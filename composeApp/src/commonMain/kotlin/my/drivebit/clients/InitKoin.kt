@@ -10,11 +10,11 @@ fun initKoin() {
         modules(
             storageModule,
             viewModelsModule,
-            appModule,
+            commonAppModule,
         )
     }
 }
 
-private val appModule =
+private val commonAppModule =
     module {
     }

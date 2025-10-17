@@ -29,18 +29,17 @@ import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.koin.dsl.module
 
-val appModule =
+val jsAppModule =
     module {
         single<Storage> { create() }
-        // Регистрируем ViewModel как factory для создания новых экземпляров
-        single { FiltersViewModel() }
+        single { FiltersViewModel(get()) }
     }
 
 @Composable
 @Suppress("FunctionName")
 actual fun App() {
     KoinApplication(application = {
-        modules(appModule)
+        modules(jsAppModule)
     }) {
         appContent()
     }
