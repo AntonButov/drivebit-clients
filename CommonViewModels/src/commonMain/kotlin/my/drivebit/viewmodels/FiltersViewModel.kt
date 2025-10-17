@@ -47,9 +47,7 @@ class FiltersViewModel(
         saveSelectedFilter(title)
     }
 
-    private fun getSelectedFilter(): String {
-        return "Все"
-    }
+    private fun getSelectedFilter(): String = "Все"
 
     private fun saveSelectedFilter(filter: String) {
     }

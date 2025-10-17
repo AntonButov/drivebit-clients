@@ -23,10 +23,9 @@ object CSSColors {
 /**
  * Расширение для преобразования Compose Color в CSSColorValue
  */
-fun androidx.compose.ui.graphics.Color.toCSSColor(): CSSColorValue {
-    return rgb(
+fun androidx.compose.ui.graphics.Color.toCSSColor(): CSSColorValue =
+    rgb(
         (red * 255).toInt(),
         (green * 255).toInt(),
-        (blue * 255).toInt()
+        (blue * 255).toInt(),
     )
-}

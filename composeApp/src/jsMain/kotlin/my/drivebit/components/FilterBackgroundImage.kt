@@ -6,9 +6,7 @@ import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Img
 
 @Composable
-fun FilterBackgroundImage(
-    backgroundIconUrl: String,
-) {
+fun FilterBackgroundImage(backgroundIconUrl: String) {
     Div({
         style {
             width(100.percent)
@@ -33,9 +31,9 @@ fun FilterBackgroundImage(
                     property("object-fit", "cover")
                     property("object-position", "center")
                 }
-            }
+            },
         )
-        
+
         // Градиентный оверлей для лучшей читаемости
         Div({
             style {

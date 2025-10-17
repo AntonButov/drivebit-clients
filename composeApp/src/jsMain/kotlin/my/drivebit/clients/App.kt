@@ -3,25 +3,19 @@ package my.drivebit.clients
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import my.drivebit.components.filterButton
 import my.drivebit.components.FilterBackgroundImage
+import my.drivebit.components.filterButton
 import my.drivebit.shared.storage.Storage
 import my.drivebit.shared.storage.create
-import my.drivebit.ui.theme.DrivebitTheme
 import my.drivebit.viewmodels.FiltersViewModel
 import org.jetbrains.compose.web.css.AlignItems
-import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.JustifyContent
 import org.jetbrains.compose.web.css.alignItems
-import org.jetbrains.compose.web.css.backgroundColor
-import org.jetbrains.compose.web.css.borderRadius
-import org.jetbrains.compose.web.css.color
 import org.jetbrains.compose.web.css.display
 import org.jetbrains.compose.web.css.flexWrap
 import org.jetbrains.compose.web.css.fontFamily
-import org.jetbrains.compose.web.css.fontSize
 import org.jetbrains.compose.web.css.gap
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.justifyContent
@@ -31,7 +25,6 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Img
-import org.jetbrains.compose.web.dom.Text
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.koin.dsl.module
@@ -86,14 +79,14 @@ fun appContent() {
                     property("max-height", "40px")
                 }
                 classes("turo-logo")
-            }
+            },
         )
 
         // Фоновая картинка для выбранного фильтра
         val selectedFilter = filters.find { it.title == selected }
         selectedFilter?.let { filter ->
             FilterBackgroundImage(
-                backgroundIconUrl = "https://antonbutov.github.io/drivebit-clients/images/searchbackground/car${filter.backgroundIcon}.jpg"
+                backgroundIconUrl = "https://antonbutov.github.io/drivebit-clients/images/searchbackground/car${filter.backgroundIcon}.jpg",
             )
         }
 
@@ -116,6 +109,6 @@ fun appContent() {
                 )
             }
         }
-          }
-   // }
+    }
+    // }
 }
