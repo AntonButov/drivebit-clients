@@ -3,6 +3,7 @@ package my.drivebit.viewmodels
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import my.drivebit.shared.storage.Storage
 
 data class FilterItem(
     val icon: String,
@@ -15,11 +16,13 @@ data class FilterScreenState(
     val filters: List<FilterItem>,
 )
 
-class FiltersViewModel {
+class FiltersViewModel(
+    private val storage: Storage,
+) {
     private val _state =
         MutableStateFlow(
             FilterScreenState(
-                selected = "Все",
+                selected = getSelectedFilter(),
                 filters =
                     listOf(
                         FilterItem(
@@ -41,5 +44,13 @@ class FiltersViewModel {
 
     fun onSelect(title: String) {
         _state.update { it.copy(selected = title) }
+        saveSelectedFilter(title)
+    }
+
+    private fun getSelectedFilter(): String {
+        return "Все"
+    }
+
+    private fun saveSelectedFilter(filter: String) {
     }
 }

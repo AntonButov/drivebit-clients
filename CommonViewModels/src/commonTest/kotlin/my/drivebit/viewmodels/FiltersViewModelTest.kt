@@ -1,12 +1,24 @@
 package my.drivebit.viewmodels
 
+import my.drivebit.shared.storage.Storage
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+class MockStorage : Storage {
+    override fun isLogined(): Boolean = false
+
+    override fun saveToken(token: String) {
+    }
+
+    override fun getToken(): String? = null
+}
+
 class FiltersViewModelTest {
+    private val mockStorage = MockStorage()
+
     @Test
     fun `initial state should have correct selected filter`() {
-        val viewModel = FiltersViewModel()
+        val viewModel = FiltersViewModel(mockStorage)
         val initialState = viewModel.state.value
 
         assertEquals("Все", initialState.selected)
@@ -17,7 +29,7 @@ class FiltersViewModelTest {
 
     @Test
     fun `onSelect should update selected filter when selecting All`() {
-        val viewModel = FiltersViewModel()
+        val viewModel = FiltersViewModel(mockStorage)
 
         viewModel.onSelect("Все")
 
@@ -26,7 +38,7 @@ class FiltersViewModelTest {
 
     @Test
     fun `onSelect should update selected filter when selecting Airports`() {
-        val viewModel = FiltersViewModel()
+        val viewModel = FiltersViewModel(mockStorage)
 
         viewModel.onSelect("Airports")
 
@@ -35,7 +47,7 @@ class FiltersViewModelTest {
 
     @Test
     fun `onSelect should handle multiple selections correctly`() {
-        val viewModel = FiltersViewModel()
+        val viewModel = FiltersViewModel(mockStorage)
 
         viewModel.onSelect("Все")
         assertEquals("Все", viewModel.state.value.selected)
@@ -49,7 +61,7 @@ class FiltersViewModelTest {
 
     @Test
     fun `onSelect should maintain filters list unchanged`() {
-        val viewModel = FiltersViewModel()
+        val viewModel = FiltersViewModel(mockStorage)
         val initialFilters = viewModel.state.value.filters
 
         viewModel.onSelect("Airports")

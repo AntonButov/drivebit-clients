@@ -89,6 +89,7 @@ kotlin {
 
         commonMain.dependencies {
             implementation(project(":Storage"))
+            implementation(project(":CommonViewModels"))
             implementation(compose.runtime)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.datetime)

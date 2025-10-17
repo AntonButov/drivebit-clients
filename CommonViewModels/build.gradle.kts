@@ -27,6 +27,8 @@ kotlin {
         commonMain.dependencies {
             implementation(kotlin("stdlib"))
             implementation(libs.kotlinx.coroutines.core)
+            implementation(project(":Storage"))
+            implementation(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
