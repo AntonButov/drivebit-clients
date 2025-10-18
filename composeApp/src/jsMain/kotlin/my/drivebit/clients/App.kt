@@ -3,6 +3,7 @@ package my.drivebit.clients
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import my.drivebit.components.FilterBackgroundImage
+import my.drivebit.components.Logo
 import my.drivebit.components.MenuUserButton
 import my.drivebit.components.filterButton
 import my.drivebit.shared.storage.di.storageModule
@@ -20,6 +21,7 @@ import org.jetbrains.compose.web.css.gap
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.justifyContent
 import org.jetbrains.compose.web.css.marginBottom
+import org.jetbrains.compose.web.css.minHeight
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.width
@@ -69,21 +71,7 @@ fun appContent() {
                 marginBottom(20.px)
             }
         }) {
-            Img(
-                src = "https://antonbutov.github.io/drivebit-clients/images/logos/turo_logo.svg",
-                alt = "Drive bit Logo",
-                attrs = {
-                    style {
-                        width(120.px)
-                        height(40.px)
-                        property("object-fit", "contain")
-                        property("transition", "all 0.3s ease")
-                        property("max-width", "120px")
-                        property("max-height", "40px")
-                    }
-                    classes("turo-logo")
-                },
-            )
+            Logo()
 
             MenuUserButton {
                 // TODO: Implement this

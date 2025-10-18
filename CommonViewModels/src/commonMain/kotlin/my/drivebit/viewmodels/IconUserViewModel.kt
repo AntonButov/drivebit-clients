@@ -8,8 +8,8 @@ class IconUserViewModel(
     val userIconUrl: String
         get() =
             if (storage.isLogined()) {
-                "$imageUrl/user.svg"
+                "$imageUrl/menu/user.svg"
             } else {
-                "$imageUrl/user.svg"
+                "$imageUrl/menu/user.svg"
             }
 }
