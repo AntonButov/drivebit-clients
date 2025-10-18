@@ -21,6 +21,7 @@ import org.jetbrains.compose.web.css.gap
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.justifyContent
 import org.jetbrains.compose.web.css.marginBottom
+import org.jetbrains.compose.web.css.minHeight
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.width
@@ -68,7 +69,6 @@ fun appContent() {
                 justifyContent(JustifyContent.SpaceBetween)
                 alignItems(AlignItems.Center)
                 marginBottom(20.px)
-                minHeight(48.px) // Добавляем минимальную высоту для консистентного выравнивания
             }
         }) {
             Logo()
