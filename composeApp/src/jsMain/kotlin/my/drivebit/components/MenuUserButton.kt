@@ -20,8 +20,8 @@ fun MenuUserButton(onClick: () -> Unit) {
             alt = "Menu",
             attrs = {
                 style {
-                    width(20.px)
-                    height(20.px)
+                    width(26.px)
+                    height(26.px)
                 }
             },
         )
@@ -31,8 +31,8 @@ fun MenuUserButton(onClick: () -> Unit) {
             alt = "User",
             attrs = {
                 style {
-                    width(20.px)
-                    height(20.px)
+                    width(26.px)
+                    height(26.px)
                     borderRadius(50.percent)
                 }
             },
