@@ -16,7 +16,7 @@ fun MenuUserButton(onClick: () -> Unit) {
         onClick = onClick,
     ) {
         Img(
-            src = "$imageUrl/burger.svg",
+            src = "$imageUrl/menu/burger.svg",
             alt = "Menu",
             attrs = {
                 style {
