@@ -18,15 +18,11 @@ import org.jetbrains.compose.web.css.display
 import org.jetbrains.compose.web.css.flexWrap
 import org.jetbrains.compose.web.css.fontFamily
 import org.jetbrains.compose.web.css.gap
-import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.justifyContent
 import org.jetbrains.compose.web.css.marginBottom
-import org.jetbrains.compose.web.css.minHeight
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Img
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 
@@ -81,7 +77,9 @@ fun appContent() {
         val selectedFilter = filters.find { it.title == selected }
         selectedFilter?.let { filter ->
             FilterBackgroundImage(
-                backgroundIconUrl = "https://antonbutov.github.io/drivebit-clients/images/searchbackground/car${filter.backgroundIcon}.jpg",
+                backgroundIconUrl =
+                    "https://antonbutov.github.io/drivebit-clients/" +
+                        "images/searchbackground/car${filter.backgroundIcon}.jpg",
             )
         }
 

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
-import my.drivebit.mobile.di.mobileModule
 import my.drivebit.mobile.screens.main.MainScreen
 import my.drivebit.shared.storage.di.storageModule
 import my.drivebit.ui.theme.DrivebitTheme
@@ -17,7 +16,6 @@ actual fun App() {
         KoinApplication(application = {
             modules(
                 storageModule,
-                mobileModule,
             )
         }) {
             Box(modifier = Modifier.fillMaxSize()) {

@@ -61,7 +61,7 @@ fun MainScreenContent(onTabSelected: (Tab) -> Unit) {
     TabNavigator(SearchTab) { tabNavigator ->
         Scaffold(
             bottomBar = {
-                BottomNavigationBar(
+                bottomNavigationBar(
                     currentTab = tabNavigator.current,
                     onTabSelected = { tab ->
                         tabNavigator.current = tab
