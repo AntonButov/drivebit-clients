@@ -1,6 +1,5 @@
 package my.drivebit.mobile.screens.main
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +29,7 @@ import my.drivebit.ui.theme.DrivebitTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun BottomNavigationBar(
+fun bottomNavigationBar(
     currentTab: Tab,
     onTabSelected: (Tab) -> Unit,
     modifier: Modifier = Modifier,
@@ -70,9 +69,10 @@ fun BottomNavigationBar(
                         modifier = Modifier.size(32.dp),
                         model = "https://antonbutov.github.io/drivebit-clients/images/filter-main/car.svg",
                         contentDescription = tab.options.title,
-                        colorFilter = ColorFilter.tint(
-                            if (isSelected) ColorsDriveBit.BlueRed else MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
+                        colorFilter =
+                            ColorFilter.tint(
+                                if (isSelected) ColorsDriveBit.BlueRed else MaterialTheme.colorScheme.onSurfaceVariant,
+                            ),
                     )
                     Text(
                         text = tab.options.title,
@@ -88,9 +88,9 @@ fun BottomNavigationBar(
 
 @Composable
 @Preview
-fun BottomNavigationBarPreview() {
+fun bottomNavigationBarPreview() {
     DrivebitTheme {
-        BottomNavigationBar(
+        bottomNavigationBar(
             currentTab = SearchTab,
             onTabSelected = { },
         )
